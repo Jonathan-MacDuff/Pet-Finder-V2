@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Switch, Route } from "react-router-dom";
 import NavBar from "./NavBar";
 import PetList from "../pages/PetList";
+import NewPetForm from "../pages/NewPetForm";
+import Home from "../pages/Home";
 
 function App() {
   return (
@@ -9,8 +11,14 @@ function App() {
     <NavBar/>
     <main>
       <Switch>
+        <Route exact path="/">
+          <Home/>
+        </Route>
         <Route path="/pets">
           <PetList/>
+        </Route>
+        <Route path="/petform">
+          <NewPetForm/>
         </Route>
       </Switch>
     </main>
