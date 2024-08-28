@@ -18,4 +18,4 @@ function PetList() {
     )
 }
 
-export default PetList
+export default PetList;

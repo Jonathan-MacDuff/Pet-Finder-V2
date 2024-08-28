@@ -15,7 +15,7 @@ class Pets(Resource):
 
     def get(self):
         pets = [pet.to_dict() for pet in Pet.query.all()]
-        return make_response(jsonify(pets), 200)
+        return make_response(pets, 200)
 
 @app.route('/')
 def index():
