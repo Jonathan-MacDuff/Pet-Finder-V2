@@ -8,20 +8,20 @@ import Home from "../pages/Home";
 function App() {
   return (
     <>
-    <NavBar/>
-    <main>
-      <Switch>
-        <Route exact path="/">
-          <Home/>
-        </Route>
-        <Route path="/pets">
-          <PetList/>
-        </Route>
-        <Route path="/petform">
-          <NewPetForm/>
-        </Route>
-      </Switch>
-    </main>
+      <NavBar />
+      <main>
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route path="/pets">
+            <PetList />
+          </Route>
+          <Route path="/petform">
+            <NewPetForm />
+          </Route>
+        </Switch>
+      </main>
     </>
   )
 }
