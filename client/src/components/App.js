@@ -4,6 +4,7 @@ import NavBar from "./NavBar";
 import PetList from "../pages/PetList";
 import NewPetForm from "../pages/NewPetForm";
 import Home from "../pages/Home";
+import Signup from "../pages/Signup";
 
 function App() {
   return (
@@ -13,6 +14,9 @@ function App() {
         <Switch>
           <Route exact path="/">
             <Home />
+          </Route>
+          <Route path='/signup'>
+            <Signup />
           </Route>
           <Route path="/pets">
             <PetList />
