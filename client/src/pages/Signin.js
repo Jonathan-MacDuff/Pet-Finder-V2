@@ -1,20 +1,20 @@
 import {React, useState, useEffect} from "react";
 
-function Signup() {
+function Signin() {
 
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
     function handleSubmit(e) {
         e.preventDefault();
-        fetch('/signup', {
+        fetch('/signin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({username, password}),
-        });
-    };
+        })
+    }
 
     return (
         <form onSubmit = {handleSubmit}>
@@ -31,4 +31,4 @@ function Signup() {
     );
 };
 
-export default Signup
+export default Signin

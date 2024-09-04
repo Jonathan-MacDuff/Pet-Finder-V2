@@ -5,6 +5,7 @@ import PetList from "../pages/PetList";
 import NewPetForm from "../pages/NewPetForm";
 import Home from "../pages/Home";
 import Signup from "../pages/Signup";
+import Signin from "../pages/Signin";
 
 function App() {
   return (
@@ -17,6 +18,9 @@ function App() {
           </Route>
           <Route path='/signup'>
             <Signup />
+          </Route>
+          <Route path='/signin'>
+            <Signin />
           </Route>
           <Route path="/pets">
             <PetList />
