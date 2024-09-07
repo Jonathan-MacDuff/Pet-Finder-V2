@@ -49,6 +49,29 @@ class Pets(Resource):
     def get(self):
         pets = [pet.to_dict() for pet in Pet.query.all()]
         return make_response(pets, 200)
+    
+class Petform(Resource):
+    def post(self):
+        json = request.get_json()
+        name = json.get('name')
+        breed = json.get('breed')
+        image = json.get('image')
+        lost = json.get('lost')
+        found = json.get('found')
+        description = json.get('description')
+        if not session['user_id']:
+            return {'message': 'Please log in to continue'}, 422
+        if (lost == True and found == True) or (lost == False and found == False):
+            return {'message': 'Please select exactly one lost or found checkbox'}, 422
+        new_pet = Pet(name=name,breed=breed,image_url=image,description=description)
+        db.session.add(new_pet)
+        db.session.commit()
+        new_report = Report(user_id=session['user_id'],pet_id=new_pet.id,report_type=('lost' if lost else 'found'))
+        db.session.add(new_report)
+        db.session.commit()
+        return make_response(new_pet.to_dict(), 200)
+
+
 
 @app.route('/')
 def index():
@@ -57,6 +80,7 @@ def index():
 api.add_resource(Pets, '/pets', endpoint='pets')
 api.add_resource(Signup, '/signup', endpoint='signup')
 api.add_resource(Signin, '/signin', endpoint='signin')
+api.add_resource(Petform, '/petform', endpoint='petform')
 
 
 if __name__ == '__main__':
