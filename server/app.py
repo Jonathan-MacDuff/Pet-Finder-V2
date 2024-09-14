@@ -51,11 +51,16 @@ class Pets(Resource):
         return make_response(pets, 200)
     
 class Petform(Resource):
+
+    def get(self, id):
+        pet = Pet.query.filter(Pet.id == id).first()
+        return make_response(pet.to_dict(), 200)
+    
     def post(self):
         json = request.get_json()
         name = json.get('name')
         breed = json.get('breed')
-        image = json.get('image')
+        image_url = json.get('image_url')
         lost = json.get('lost')
         found = json.get('found')
         description = json.get('description')
@@ -63,13 +68,36 @@ class Petform(Resource):
             return {'message': 'Please log in to continue'}, 422
         if (lost == True and found == True) or (lost == False and found == False):
             return {'message': 'Please select exactly one lost or found checkbox'}, 422
-        new_pet = Pet(name=name,breed=breed,image_url=image,description=description)
+        new_pet = Pet(name=name,breed=breed,image_url=image_url,description=description)
         db.session.add(new_pet)
         db.session.commit()
         new_report = Report(user_id=session['user_id'],pet_id=new_pet.id,report_type=('lost' if lost else 'found'))
         db.session.add(new_report)
         db.session.commit()
         return make_response(new_pet.to_dict(), 200)
+    
+    def patch(self, id):
+        json = request.get_json()
+        pet = Pet.query.filter(Pet.id == id).first()
+        name = json.get('name')
+        breed = json.get('breed')
+        image_url = json.get('image_url')
+        description = json.get('description')
+        pet.name = name if name else pet.name
+        pet.breed = breed if breed else pet.name
+        pet.image_url = image_url if image_url else pet.image_url
+        pet.description = description if description else pet.description
+        db.session.add(pet)
+        db.session.commit()
+        return make_response(pet.to_dict(), 200)
+    
+    def delete(self, id):
+        pet = Pet.query.filter(Pet.id == id).first()
+        db.session.delete(pet)
+        db.session.commit()
+        return {'message': 'Pet successfully deleted'}, 200
+
+
 
 
 

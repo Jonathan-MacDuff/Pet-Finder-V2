@@ -4,7 +4,7 @@ function NewPetForm() {
 
     const [name, setName] = useState('')
     const [breed, setBreed] = useState('')
-    const [image, setImage] = useState('')
+    const [image_url, setImage] = useState('')
     const [description, setDescription] = useState('')
     const [lost, setLost] = useState(false)
     const [found, setFound] = useState(false)
@@ -16,7 +16,7 @@ function NewPetForm() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({name, breed, image, description, lost, found}),
+            body: JSON.stringify({name, breed, image_url, description, lost, found}),
         });
     };
 
@@ -31,7 +31,7 @@ function NewPetForm() {
                     onChange={(e) => setBreed(e.target.value)}/>
             </label>
             <label>Image
-                <input type='text' id='image' value={image}
+                <input type='text' id='image' value={image_url}
                     onChange={(e) => setImage(e.target.value)}/>
             </label>
             <label>Description
