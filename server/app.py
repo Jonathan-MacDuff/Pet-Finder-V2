@@ -91,8 +91,10 @@ class Petform(Resource):
         db.session.commit()
         return make_response(pet.to_dict(), 200)
     
-    def delete(self, id):
-        pet = Pet.query.filter(Pet.id == id).first()
+    def delete(self):
+        data = request.get_json()
+        id = data.get('id')
+        pet = Pet.query.filter(id == id).first()
         db.session.delete(pet)
         db.session.commit()
         return {'message': 'Pet successfully deleted'}, 200
