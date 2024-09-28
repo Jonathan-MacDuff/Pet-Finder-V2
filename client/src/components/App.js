@@ -6,6 +6,7 @@ import NewPetForm from "../pages/NewPetForm";
 import Home from "../pages/Home";
 import Signup from "../pages/Signup";
 import Signin from "../pages/Signin";
+import PetUpdateForm from "./PetUpdateForm";
 
 function App() {
   return (
@@ -27,6 +28,9 @@ function App() {
           </Route>
           <Route path="/petform">
             <NewPetForm />
+          </Route>
+          <Route path='/petupdate/:id'>
+            <PetUpdateForm />
           </Route>
         </Switch>
       </main>

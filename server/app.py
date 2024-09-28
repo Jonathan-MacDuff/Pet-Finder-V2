@@ -76,9 +76,10 @@ class Petform(Resource):
         db.session.commit()
         return make_response(new_pet.to_dict(), 200)
     
-    def patch(self, id):
+    def patch(self):
         json = request.get_json()
-        pet = Pet.query.filter(Pet.id == id).first()
+        id = json.get('id')
+        pet = Pet.query.filter(id == id).first()
         name = json.get('name')
         breed = json.get('breed')
         image_url = json.get('image_url')
@@ -92,8 +93,8 @@ class Petform(Resource):
         return make_response(pet.to_dict(), 200)
     
     def delete(self):
-        data = request.get_json()
-        id = data.get('id')
+        json = request.get_json()
+        id = json.get('id')
         pet = Pet.query.filter(id == id).first()
         db.session.delete(pet)
         db.session.commit()

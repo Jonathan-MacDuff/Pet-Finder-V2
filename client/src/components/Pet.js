@@ -1,19 +1,14 @@
 import React from "react";
+import {useHistory} from "react-router-dom"
 
 
 function Pet({pet}) {
 
+    const navigate = useHistory()
     const id = pet.id;
 
     function handleUpdateClick() {
-        fetch('/petform', {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({pet}),
-        })
-        .then((r) => r.json())
+        navigate.push(`/petupdate/${id}`)
     }
 
     function handleDeleteClick() {
