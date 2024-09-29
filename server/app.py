@@ -52,8 +52,9 @@ class Pets(Resource):
     
 class Petform(Resource):
 
-    def get(self, id):
-        pet = Pet.query.filter(Pet.id == id).first()
+    def get(self):
+        id = request.args.get('id')
+        pet = Pet.query.filter(id == id).first()
         return make_response(pet.to_dict(), 200)
     
     def post(self):

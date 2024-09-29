@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { Switch, Route } from "react-router-dom";
 import NavBar from "./NavBar";
 import PetList from "../pages/PetList";
@@ -7,6 +6,7 @@ import Home from "../pages/Home";
 import Signup from "../pages/Signup";
 import Signin from "../pages/Signin";
 import PetUpdateForm from "./PetUpdateForm";
+import SinglePet from "./SinglePet";
 
 function App() {
   return (
@@ -28,6 +28,9 @@ function App() {
           </Route>
           <Route path="/petform">
             <NewPetForm />
+          </Route>
+          <Route path="/singlepet/:id">
+            <SinglePet />
           </Route>
           <Route path='/petupdate/:id'>
             <PetUpdateForm />
