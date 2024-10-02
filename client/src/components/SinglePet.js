@@ -11,26 +11,44 @@ function SinglePet() {
     useEffect(() => {
         fetch(`/petform?id=${id}`)
             .then((r) => r.json())
-            .then((data) => setData(data))
+            .then((data) => {
+                console.log(data);
+                setData(data)
+            })
             .catch((error) => {
                 console.error("Error fetching pet data:", error);
             });
     }, [id]);
 
-    function handleUpdateClick() {
-        navigate.push(`/petupdate/${id}`)
+    function handleUpdateClick(event) {
+        event.preventDefault()
+        fetch('/checksession')
+        .then((r) => r.json())
+        .then((user) => {
+            if (user.id === data.report.user.id) {
+                navigate.push(`/petupdate/${id}`)
+            }
+            else return "Please log in as this pet's user to update it"
+        })       
     };
 
-    function handleDeleteClick() {
-        fetch('/petform', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({id}),
-        })
+    function handleDeleteClick(event) {
+        event.preventDefault();
+        fetch('/checksession')
         .then((r) => r.json())
-        .then(() => {console.log('Pet deleted successfully')})
+        .then((user) => {
+            if (user.id === data.report.user.id) {       
+                fetch('/petform', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({id}),
+                })
+                .then(() => {console.log('Pet deleted successfully')})
+            }
+            else return "Please log in as this pet's user to delete it"
+        });
     };
 
     if (!data) return <div>Loading...</div>

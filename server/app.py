@@ -17,10 +17,6 @@ class Signup(Resource):
         json=request.get_json()
         username = json.get('username')
         password = json.get('password')
-        if not username:
-            return {'message': 'Username required'}, 422
-        if not password:
-            return {'message': 'Password required'}, 422
         new_user = User(username=username, password=password)
         db.session.add(new_user)
         db.session.commit()
@@ -42,7 +38,15 @@ class Signin(Resource):
             return {'message': 'Invalid password'}, 422
         session['user_id'] = user.id
         return make_response(user.to_dict(), 200)
+    
+class CheckSession(Resource):
 
+    def get(self):
+        user = User.query.filter(User.id == session.get('user_id')).first()
+        if user:
+            return user.to_dict()
+        else:
+            return {'message': '401: Not Authorized'}, 401
 
 class Pets(Resource):
 
@@ -90,10 +94,10 @@ class Petform(Resource):
         image_url = json.get('image_url')
         description = json.get('description')
         lost = json.get('lost')
-        pet.name = name if name else pet.name
-        pet.breed = breed if breed else pet.breed
-        pet.image_url = image_url if image_url else pet.image_url
-        pet.description = description if description else pet.description
+        pet.name = name
+        pet.breed = breed
+        pet.image_url = image_url
+        pet.description = description
         report.report_type = 'lost' if lost else 'found'
         db.session.add(pet)
         db.session.add(report)
@@ -120,6 +124,7 @@ api.add_resource(Pets, '/pets', endpoint='pets')
 api.add_resource(Signup, '/signup', endpoint='signup')
 api.add_resource(Signin, '/signin', endpoint='signin')
 api.add_resource(Petform, '/petform', endpoint='petform')
+api.add_resource(CheckSession, '/checksession')
 
 
 if __name__ == '__main__':

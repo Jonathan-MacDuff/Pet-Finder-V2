@@ -27,7 +27,7 @@ function PetUpdateForm() {
         lost: yup.boolean(),
         found: yup.boolean(),
     }).test('lost-or-found', 'Please select either "Lost" or "Found", but not both', function (values) {
-        if (values.lost == values.found) {
+        if (values.lost === values.found) {
             return this.createError({path: 'lost-or-found', message: 'Please select either "Lost" or "Found", but not both'})
         }
         else return true;
@@ -46,12 +46,19 @@ function PetUpdateForm() {
         validationSchema: formSchema,
         enableReinitialize: true,
         onSubmit: (values) => {
-            fetch('/petform', {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(values, null, 2),
+            fetch('/checksession')
+            .then((r) => r.json())
+            .then((user) => {
+                if (user.id === data.report.user.id) {
+                    fetch('/petform', {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(values, null, 2),
+                    });
+                }
+                else return 'Unauthorized, please log in to continue'
             });
         }
     });

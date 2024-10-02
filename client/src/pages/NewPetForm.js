@@ -12,7 +12,7 @@ function NewPetForm() {
         lost: yup.boolean(),
         found: yup.boolean(),
     }).test('lost-or-found', 'Please select either "Lost" or "Found", but not both', function (values) {
-        if (values.lost == values.found) {
+        if (values.lost === values.found) {
             return this.createError({path: 'lost-or-found', message: 'Please select either "Lost" or "Found", but not both'})
         }
         else return true;
