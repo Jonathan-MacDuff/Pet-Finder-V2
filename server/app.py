@@ -27,10 +27,6 @@ class Signin(Resource):
         json=request.get_json()
         username = json.get('username')
         password = json.get('password')
-        if not username:
-            return {'message': 'Username required'}, 422
-        if not password:
-            return {'message': 'Password required'}, 422
         user = User.query.filter(User.username == username).first()
         if not user:
             return {'message': 'Invalid username'}, 422
