@@ -8,12 +8,19 @@ function PetList() {
     useEffect(() => {
         fetch("/pets")
             .then((r) => r.json())
-            .then((r) => setPets(r));
+            .then((petData) => {
+                const petsWithReports = petData.map(pet => ({
+                    pet,
+                    report: pet.reports[0]
+                }));
+                setPets(petsWithReports);
+            })
+            .catch((error) => console.error('Error fetching pets:', error));
     }, []);
 
     return (
-        pets.map((pet) => (
-            <Pet pet={pet} key={pet.id}></Pet>
+        pets.map(({pet, report}) => (
+            <Pet pet={pet} report={report} key={pet.id}></Pet>
         ))
     )
 }

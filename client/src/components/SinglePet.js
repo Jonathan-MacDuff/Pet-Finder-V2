@@ -6,15 +6,16 @@ function SinglePet() {
 
     const { id } = useParams();
     const navigate = useHistory();
-    const [pet, setPet] = useState(null);
+    const [data, setData] = useState(null);
 
     useEffect(() => {
         fetch(`/petform?id=${id}`)
-        .then((r) => r.json())
-        .then((data) => setPet(data));
-        
+            .then((r) => r.json())
+            .then((data) => setData(data))
+            .catch((error) => {
+                console.error("Error fetching pet data:", error);
+            });
     }, [id]);
-    
 
     function handleUpdateClick() {
         navigate.push(`/petupdate/${id}`)
@@ -32,13 +33,14 @@ function SinglePet() {
         .then(() => {console.log('Pet deleted successfully')})
     };
 
-    if (!pet) return <div>Loading...</div>
+    if (!data) return <div>Loading...</div>
 
     return (
         <>
-        <h1>{pet.name}</h1>
-        <h2>{pet.breed}</h2>
-        <p>{pet.description}</p>
+        <h1>{data.pet.name}</h1>
+        <h2>{data.pet.breed}</h2>
+        <p>{data.pet.description}</p>
+        <h3>{data.report.lost ? 'Lost' : 'Found'}</h3>
         <button onClick = {handleUpdateClick} >Update</button>
         <button onClick = {handleDeleteClick} >Delete</button>
         </>

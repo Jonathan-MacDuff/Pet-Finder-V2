@@ -47,15 +47,18 @@ class Signin(Resource):
 class Pets(Resource):
 
     def get(self):
-        pets = [pet.to_dict() for pet in Pet.query.all()]
-        return make_response(pets, 200)
+        pets = Pet.query.all()
+        return make_response([pet.to_dict() for pet in pets], 200)
     
 class Petform(Resource):
 
     def get(self):
         id = request.args.get('id')
-        pet = Pet.query.filter(id == id).first()
-        return make_response(pet.to_dict(), 200)
+
+        pet = Pet.query.filter(Pet.id == id).first()
+        report = Report.query.filter(Report.pet_id == id).first()
+        
+        return make_response({'pet': pet.to_dict(), 'report': report.to_dict()}, 200)
     
     def post(self):
         json = request.get_json()
@@ -80,23 +83,27 @@ class Petform(Resource):
     def patch(self):
         json = request.get_json()
         id = json.get('id')
-        pet = Pet.query.filter(id == id).first()
+        pet = Pet.query.filter(Pet.id == id).first()
+        report = Report.query.filter(Report.pet_id == id).first()
         name = json.get('name')
         breed = json.get('breed')
         image_url = json.get('image_url')
         description = json.get('description')
+        lost = json.get('lost')
         pet.name = name if name else pet.name
-        pet.breed = breed if breed else pet.name
+        pet.breed = breed if breed else pet.breed
         pet.image_url = image_url if image_url else pet.image_url
         pet.description = description if description else pet.description
+        report.report_type = 'lost' if lost else 'found'
         db.session.add(pet)
+        db.session.add(report)
         db.session.commit()
         return make_response(pet.to_dict(), 200)
     
     def delete(self):
         json = request.get_json()
         id = json.get('id')
-        pet = Pet.query.filter(id == id).first()
+        pet = Pet.query.filter(Pet.id == id).first()
         db.session.delete(pet)
         db.session.commit()
         return {'message': 'Pet successfully deleted'}, 200
