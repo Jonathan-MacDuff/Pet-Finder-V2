@@ -51,6 +51,18 @@ function SinglePet() {
         });
     };
 
+    function handleSightingClick(event) {
+        event.preventDefault()
+        fetch('/sighting', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({id})
+        })
+        .then(() => {console.log('Pet sighting reported successfully')})
+    };
+
     if (!data) return <div>Loading...</div>
 
     return (
@@ -59,6 +71,7 @@ function SinglePet() {
         <h2>{data.pet.breed}</h2>
         <p>{data.pet.description}</p>
         <h3>{data.report.lost ? 'Lost' : 'Found'}</h3>
+        <button onClick = {handleSightingClick}>Report Sighting</button>
         <button onClick = {handleUpdateClick} >Update</button>
         <button onClick = {handleDeleteClick} >Delete</button>
         </>

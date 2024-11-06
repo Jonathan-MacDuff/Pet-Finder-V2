@@ -103,6 +103,26 @@ class Petform(Resource):
         db.session.delete(pet)
         db.session.commit()
         return {'message': 'Pet successfully deleted'}, 200
+    
+class Sighting(Resource):
+
+    def get(self):
+        json = request.get_json()
+        pet_id = json.get('id')
+        sightings = Report.query.filter(Report.pet_id == pet_id).all()
+        return make_response([sighting.to_dict() for sighting in sightings], 200)
+
+    def post(self):
+        json = request.get_json()
+        pet_id = json.get('id')
+        if session.get('user_id'):
+            sighting_report = Report(user_id=session.get('user_id'), pet_id=pet_id, report_type=('sighting'))
+            db.session.add(sighting_report)
+            db.session.commit()
+            return make_response(sighting_report.to_dict(), 200)
+        else:
+            return {'message': 'Please log in to report a sighting'}, 422
+
 
 
 
@@ -116,6 +136,7 @@ api.add_resource(Pets, '/pets', endpoint='pets')
 api.add_resource(Signup, '/signup', endpoint='signup')
 api.add_resource(Signin, '/signin', endpoint='signin')
 api.add_resource(Petform, '/petform', endpoint='petform')
+api.add_resource(Sighting, '/sighting', endpoint='sighting')
 api.add_resource(CheckSession, '/checksession')
 
 
