@@ -107,9 +107,8 @@ class Petform(Resource):
 class Sighting(Resource):
 
     def get(self):
-        json = request.get_json()
-        pet_id = json.get('id')
-        sightings = Report.query.filter(Report.pet_id == pet_id).all()
+        pet_id = request.args.get('id')
+        sightings = Report.query.filter(Report.pet_id == pet_id).filter(Report.report_type == 'sighting').all()
         return make_response([sighting.to_dict() for sighting in sightings], 200)
 
     def post(self):

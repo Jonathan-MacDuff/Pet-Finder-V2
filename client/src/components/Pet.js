@@ -1,15 +1,15 @@
 import React from "react";
-import {useHistory} from "react-router-dom"
+import {useHistory} from "react-router-dom";
 
 
 function Pet({pet, report}) {
 
-    const navigate = useHistory()
+    const navigate = useHistory();
     const id = pet.id;
 
     function handlePetClick() {
         navigate.push(`/singlepet/${id}`)
-    }
+    };
 
     return (
         <>
@@ -19,7 +19,6 @@ function Pet({pet, report}) {
         <h3>{report.report_type}</h3>
         </>
     );
-
 };
 
 export default Pet;

@@ -63,6 +63,19 @@ function SinglePet() {
         .then(() => {console.log('Pet sighting reported successfully')})
     };
 
+    function handleSightingsClick(event) {
+        event.preventDefault();
+        fetch('/checksession')
+        .then((r) => r.json())
+        .then((user) => {
+            if (user.id === data.report.user.id) {
+                navigate.push(`/sighting/${id}`)
+            }
+            else return "Please log in as this pet's user to view it's sightings"
+        })       
+    };
+
+
     if (!data) return <div>Loading...</div>
 
     return (
@@ -74,6 +87,7 @@ function SinglePet() {
         <button onClick = {handleSightingClick}>Report Sighting</button>
         <button onClick = {handleUpdateClick} >Update</button>
         <button onClick = {handleDeleteClick} >Delete</button>
+        <button onClick = {handleSightingsClick}>View Sightings</button>
         </>
     );
 
