@@ -1,8 +1,10 @@
-import {React} from "react";
+import {React, useState} from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
 function Signup() {
+
+    const [message, setMessage] = useState('');
 
     const formSchema = yup.object().shape({
         username: yup.string().required('Username required').max(20),
@@ -22,7 +24,9 @@ function Signup() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(values, null, 2),
-            }).then((r) => r.json()) 
+            })
+            .then((r) => r.json())
+            .then(() => setMessage(`Account successfully created, logged in as ${formik.values.username}`)) 
         },
     })
 
@@ -40,6 +44,7 @@ function Signup() {
                 <p style={{color:'red'}}>{formik.errors.password}</p>
             </label>
             <button type='submit'>Submit</button>
+            <p>{message}</p>
         </form>
     );
 };

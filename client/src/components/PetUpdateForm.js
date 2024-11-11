@@ -8,6 +8,7 @@ function PetUpdateForm() {
 
     const { id } = useParams();
     const [data, setData] = useState(null);
+    const [message, setMessage] = useState('');
 
     useEffect(() => {
         fetch(`/petform?id=${id}`)
@@ -16,8 +17,6 @@ function PetUpdateForm() {
             console.log(data);
             setData(data)});
     }, [id]);
-
-
 
     const formSchema = yup.object().shape({
         name: yup.string().required('Name is required, enter "N/A" if unknown').max(20),
@@ -59,9 +58,17 @@ function PetUpdateForm() {
                     });
                 }
                 else return 'Unauthorized, please log in to continue'
-            });
+            })
+            .then(() => {
+                setMessage("Pet updated successfully");
+            })
         }
     });
+
+    const handleChange = (e) => {
+        setMessage('');
+        formik.handleChange(e);
+    };
 
     if (!data) return <div>Loading...</div>;
 
@@ -69,38 +76,39 @@ function PetUpdateForm() {
         <form onSubmit = {formik.handleSubmit}>
             <label>Name
                 <input type='text' id='name' name='name' value={formik.values.name}
-                    onChange={formik.handleChange}/>
+                    onChange={handleChange}/>
                 <p style={{color:'red'}}>{formik.errors.name}</p>
             </label>
             <label>Breed
                 <input type='text' id='breed' name='breed' value={formik.values.breed}
-                    onChange={formik.handleChange}/>
+                    onChange={handleChange}/>
                 <p style={{color:'red'}}>{formik.errors.breed}</p>
             </label>
             <label>Image
                 <input type='text' id='image' name='image_url' value={formik.values.image_url}
-                    onChange={formik.handleChange}/>
+                    onChange={handleChange}/>
                 <p style={{color:'red'}}>{formik.errors.image_url}</p>
             </label>
             <label>Description
                 <input type='text' id='description' name='description' value={formik.values.description}
-                    onChange={formik.handleChange}/>
+                    onChange={handleChange}/>
                 <p style={{color:'red'}}>{formik.errors.description}</p>
             </label>
             <label>Lost
                 <input type='checkbox' id='lost' name='lost' checked={formik.values.lost}
-                    onChange={formik.handleChange}/>
+                    onChange={handleChange}/>
                 <p style={{color:'red'}}>{formik.errors.lost}</p>
             </label>
             <label>Found
                 <input type='checkbox' id='found' name='found' checked={formik.values.found}
-                    onChange={formik.handleChange}/>
+                    onChange={handleChange}/>
                 <p style={{color:'red'}}>{formik.errors.found}</p>
             </label>
             {formik.errors['lost-or-found'] && (
                 <p style={{ color: 'red' }}>{formik.errors['lost-or-found']}</p>
             )}
             <button type='submit'>Submit</button>
+            <p>{message}</p>
         </form>
     );
 };

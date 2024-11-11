@@ -1,8 +1,10 @@
-import {React} from "react";
+import {React, useState} from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
 function NewPetForm() {
+
+    const [message, setMessage] = useState('');
 
     const formSchema = yup.object().shape({
         name: yup.string().required('Name is required, enter "N/A" if unknown').max(20),
@@ -35,7 +37,8 @@ function NewPetForm() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(values, null, 2),
-            });
+            })
+            .then(() => setMessage('Pet created successfully'))
         }
     });
 
@@ -74,6 +77,7 @@ function NewPetForm() {
             {formik.errors['lost-or-found'] && (
                 <p style={{ color: 'red' }}>{formik.errors['lost-or-found']}</p>
             )}
+            <p>{message}</p>
             <button type='submit'>Submit</button>
         </form>
     );

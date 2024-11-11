@@ -16,6 +16,7 @@ class Signup(Resource):
         new_user = User(username=username, password=password)
         db.session.add(new_user)
         db.session.commit()
+        session['user_id'] = new_user.id
         return make_response(new_user.to_dict(), 201)
     
 class Signin(Resource):
@@ -121,11 +122,6 @@ class Sighting(Resource):
             return make_response(sighting_report.to_dict(), 200)
         else:
             return {'message': 'Please log in to report a sighting'}, 422
-
-
-
-
-
 
 @app.route('/')
 def index():

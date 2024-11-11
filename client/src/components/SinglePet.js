@@ -7,6 +7,7 @@ function SinglePet() {
     const { id } = useParams();
     const navigate = useHistory();
     const [data, setData] = useState(null);
+    const [message, setMessage] = useState('');
 
     useEffect(() => {
         fetch(`/petform?id=${id}`)
@@ -17,6 +18,7 @@ function SinglePet() {
             })
             .catch((error) => {
                 console.error("Error fetching pet data:", error);
+                setMessage(`Error fetching pet data: ${error}`)
             });
     }, [id]);
 
@@ -28,7 +30,7 @@ function SinglePet() {
             if (user.id === data.report.user.id) {
                 navigate.push(`/petupdate/${id}`)
             }
-            else return "Please log in as this pet's user to update it"
+            else setMessage("Please log in as this pet's user to update it")
         })       
     };
 
@@ -45,9 +47,9 @@ function SinglePet() {
                     },
                     body: JSON.stringify({id}),
                 })
-                .then(() => {console.log('Pet deleted successfully')})
+                .then(() => {setMessage('Pet deleted successfully')})
             }
-            else return "Please log in as this pet's user to delete it"
+            else setMessage("Please log in as this pet's user to delete it")
         });
     };
 
@@ -60,7 +62,7 @@ function SinglePet() {
             },
             body: JSON.stringify({id})
         })
-        .then(() => {console.log('Pet sighting reported successfully')})
+        .then(() => {setMessage('Pet sighting reported successfully')})
     };
 
     function handleSightingsClick(event) {
@@ -71,7 +73,7 @@ function SinglePet() {
             if (user.id === data.report.user.id) {
                 navigate.push(`/sighting/${id}`)
             }
-            else return "Please log in as this pet's user to view it's sightings"
+            else setMessage("Please log in as this pet's user to view it's sightings")
         })       
     };
 
@@ -88,6 +90,7 @@ function SinglePet() {
         <button onClick = {handleUpdateClick} >Update</button>
         <button onClick = {handleDeleteClick} >Delete</button>
         <button onClick = {handleSightingsClick}>View Sightings</button>
+        <p>{message}</p>
         </>
     );
 
