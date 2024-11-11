@@ -8,7 +8,7 @@ This is an app to report lost and found pets. A user should be able to create an
 
 ### app.py
 
-This file provides resources for the front end to interact with the database. The Signup resource generates a new user to the database based on user input. The Signin resource allows users to sign in, storing their user id in the current session. The CheckSession resource checks what the current session id is to validate certain restricted functionality. The Pets resource returns all pets in the database. The Petform resource can return a single pet, create a new pet and associated report, update a pet and associated report, or delete a pet and associated report.
+This file provides resources for the front end to interact with the database. The Signup resource generates a new user to the database based on user input. The Signin resource allows users to sign in, storing their user id in the current session. The CheckSession resource checks what the current session id is to validate certain restricted functionality. The Pets resource returns all pets in the database. The Petform resource can return a single pet, create a new pet and associated report, update a pet and associated report, or delete a pet and associated report. The Sightings reource adds or displays sightings of the referenced pet.
 
 ### models.py
 
@@ -36,13 +36,17 @@ This file defines a NavBar to be used on all pages for quick navigation.
 
 This file displays a simplified single Pet, and is used to display all pets in sequence.
 
+## PetSighting.js
+
+This file allows a user to display users who have reported a sighting of the referenced pet.
+
 ## PetUpdateForm.js
 
 This file allows a user to update an existing Pet associated with their account.
 
 ## SinglePet.js
 
-This file allows for a more detailed view of a single Pet, as well as update and delete functionality for the user who reported this pet.
+This file allows for a more detailed view of a single Pet, as well as update and delete functionality for the user who reported this pet. The pet owner can also view all sightings of the pet.
 
 ## Home.js
 
