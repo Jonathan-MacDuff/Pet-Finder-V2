@@ -23,6 +23,6 @@ function PetList() {
             <Pet pet={pet} report={report} key={pet.id}></Pet>
         ))
     )
-}
+};
 
 export default PetList;

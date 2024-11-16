@@ -8,7 +8,7 @@ This is an app to report lost and found pets. A user should be able to create an
 
 ### app.py
 
-This file provides resources for the front end to interact with the database. The Signup resource generates a new user to the database based on user input. The Signin resource allows users to sign in, storing their user id in the current session. The CheckSession resource checks what the current session id is to validate certain restricted functionality. The Pets resource returns all pets in the database. The Petform resource can return a single pet, create a new pet and associated report, update a pet and associated report, or delete a pet and associated report. The Sightings reource adds or displays sightings of the referenced pet.
+This file provides resources for the front end to interact with the database. The Signup resource generates a new user to the database based on user input. The Signin resource allows users to sign in, storing their user id in the current session. The Signout resource removes the user id from the session. The CheckSession resource checks what the current session id is to validate certain restricted functionality. The Pets resource returns all pets in the database. The Petform resource can return a single pet, create a new pet and associated report, update a pet and associated report, or delete a pet and associated report. The Sightings reource adds or displays sightings of the referenced pet.
 
 ### models.py
 

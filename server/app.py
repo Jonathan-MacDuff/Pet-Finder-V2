@@ -32,6 +32,11 @@ class Signin(Resource):
         session['user_id'] = user.id
         return make_response(user.to_dict(), 200)
     
+class Signout(Resource):
+    def delete(self):
+        session['user_id'] = 0
+        return make_response({}, 200)
+
 class CheckSession(Resource):
 
     def get(self):
@@ -130,6 +135,7 @@ def index():
 api.add_resource(Pets, '/pets', endpoint='pets')
 api.add_resource(Signup, '/signup', endpoint='signup')
 api.add_resource(Signin, '/signin', endpoint='signin')
+api.add_resource(Signout, '/signout', endpoint='signout')
 api.add_resource(Petform, '/petform', endpoint='petform')
 api.add_resource(Sighting, '/sighting', endpoint='sighting')
 api.add_resource(CheckSession, '/checksession')

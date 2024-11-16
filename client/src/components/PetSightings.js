@@ -16,16 +16,14 @@ function PetSightings() {
     }, [id]);
 
     function renderSightings() {
-        const sightings = [];
-        
+        const sightings = [];        
         for (const key in data) {
             if (data[key].report_type === "sighting") {
                 sightings.push(
                     <li key={key}>{data[key].user.username}</li>
                 );
             }
-        }
-        
+        }        
         return sightings.length > 0 ? sightings : <p>No sightings reported.</p>;
     };
 

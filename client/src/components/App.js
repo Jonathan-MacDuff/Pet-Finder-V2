@@ -8,8 +8,19 @@ import Signin from "../pages/Signin";
 import PetUpdateForm from "./PetUpdateForm";
 import SinglePet from "./SinglePet";
 import PetSightings from "./PetSightings";
+import { useEffect, useState } from "react";
 
 function App() {
+
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    fetch('/checksession')
+    .then((r) => r.json())
+    .then((data) => setUser(data))
+  });
+
+
   return (
     <>
       <NavBar />
@@ -31,10 +42,10 @@ function App() {
             <NewPetForm />
           </Route>
           <Route path="/singlepet/:id">
-            <SinglePet />
+            <SinglePet user={user}/>
           </Route>
           <Route path='/petupdate/:id'>
-            <PetUpdateForm />
+            <PetUpdateForm user={user}/>
           </Route>
           <Route path='/sighting/:id'>
             <PetSightings />

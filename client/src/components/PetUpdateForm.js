@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 
 
-function PetUpdateForm() {
+function PetUpdateForm({user}) {
 
     const { id } = useParams();
     const [data, setData] = useState(null);
@@ -45,23 +45,17 @@ function PetUpdateForm() {
         validationSchema: formSchema,
         enableReinitialize: true,
         onSubmit: (values) => {
-            fetch('/checksession')
-            .then((r) => r.json())
-            .then((user) => {
-                if (user.id === data.report.user.id) {
-                    fetch('/petform', {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(values, null, 2),
-                    });
-                }
-                else return 'Unauthorized, please log in to continue'
-            })
-            .then(() => {
-                setMessage("Pet updated successfully");
-            })
+            if (user.id === data.report.user.id) {
+                fetch('/petform', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(values, null, 2),
+                })
+                .then(() => setMessage("Pet updated successfully"))
+            }
+            else setMessage('Unauthorized, please log in to continue')
         }
     });
 

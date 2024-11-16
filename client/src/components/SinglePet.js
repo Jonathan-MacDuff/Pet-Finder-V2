@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 
 
-function SinglePet() {
+function SinglePet({user}) {
 
     const { id } = useParams();
     const navigate = useHistory();
@@ -11,47 +11,40 @@ function SinglePet() {
 
     useEffect(() => {
         fetch(`/petform?id=${id}`)
-            .then((r) => r.json())
-            .then((data) => {
-                console.log(data);
-                setData(data)
-            })
-            .catch((error) => {
-                console.error("Error fetching pet data:", error);
-                setMessage(`Error fetching pet data: ${error}`)
-            });
+        .then((r) => r.json())
+        .then((data) => {
+            console.log(data);
+            setData(data)
+        })
+        .catch((error) => {
+            console.error("Error fetching pet data:", error);
+            setMessage(`Error fetching pet data: ${error}`)
+        });
     }, [id]);
 
     function handleUpdateClick(event) {
         event.preventDefault()
-        fetch('/checksession')
-        .then((r) => r.json())
-        .then((user) => {
-            if (user.id === data.report.user.id) {
-                navigate.push(`/petupdate/${id}`)
-            }
-            else setMessage("Please log in as this pet's user to update it")
-        })       
-    };
+        if (user.id === data.report.user.id) {
+            navigate.push(`/petupdate/${id}`)
+        }
+        else setMessage("Please log in as this pet's user to update it")
+    };       
 
     function handleDeleteClick(event) {
         event.preventDefault();
-        fetch('/checksession')
-        .then((r) => r.json())
-        .then((user) => {
-            if (user.id === data.report.user.id) {       
-                fetch('/petform', {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({id}),
-                })
-                .then(() => {setMessage('Pet deleted successfully')})
-            }
-            else setMessage("Please log in as this pet's user to delete it")
-        });
-    };
+        if (user.id === data.report.user.id) {       
+            fetch('/petform', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({id}),
+            })
+            .then(() => {setMessage('Pet deleted successfully')})
+        }
+        else setMessage("Please log in as this pet's user to delete it")
+        };
+
 
     function handleSightingClick(event) {
         event.preventDefault()
@@ -67,14 +60,10 @@ function SinglePet() {
 
     function handleSightingsClick(event) {
         event.preventDefault();
-        fetch('/checksession')
-        .then((r) => r.json())
-        .then((user) => {
-            if (user.id === data.report.user.id) {
-                navigate.push(`/sighting/${id}`)
-            }
-            else setMessage("Please log in as this pet's user to view it's sightings")
-        })       
+        if (user.id === data.report.user.id) {
+            navigate.push(`/sighting/${id}`)
+        }
+        else setMessage("Please log in as this pet's user to view it's sightings")
     };
 
 
