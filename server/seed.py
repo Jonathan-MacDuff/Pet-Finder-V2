@@ -9,7 +9,7 @@ from faker import Faker
 # Local imports
 from app import app
 from config import db
-from models import User, Pet, Report
+from models import User, Pet, Report, Comment
 
 if __name__ == '__main__':
     fake = Faker()
@@ -22,6 +22,8 @@ if __name__ == '__main__':
         Pet.query.delete()
         print("Deleting all reports...")
         Report.query.delete()
+        print("Deleting all comments")
+        Comment.query.delete()
 
         print("Generating users...")
         users = []
@@ -62,6 +64,19 @@ if __name__ == '__main__':
             )
             reports.append(report)
         db.session.add_all(reports)
+
+        print("Generating comments...")
+        comments = []
+        for i in range(2):
+            for pet in pets:
+                comment = Comment(
+                    content=fake.paragraph(nb_sentences=2),
+                    user_id=rc([user.id for user in User.query.all()]),
+                    pet_id=pet.id
+                )
+                comments.append(comment)
+        db.session.add_all(comments)
+
 
         db.session.commit()
         print("Seed data generated successfully.")

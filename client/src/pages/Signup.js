@@ -28,7 +28,7 @@ function Signup() {
             .then((r) => r.json())
             .then(() => setMessage(`Account successfully created, logged in as ${formik.values.username}`)) 
         },
-    })
+    });
 
 
     return (
