@@ -4,7 +4,7 @@ from flask import request, make_response, jsonify
 from flask_restful import Resource
 
 from config import app, db, api, session
-from models import User, Pet, Report
+from models import User, Pet, Report, Comment
 
 
 
@@ -127,6 +127,40 @@ class Sighting(Resource):
             return make_response(sighting_report.to_dict(), 200)
         else:
             return {'message': 'Please log in to report a sighting'}, 422
+        
+class Comment(Resource):
+
+    def get(self):
+        pet_id = request.args.get('id')
+        comments = Comment.query.filter(Comment.pet_id == pet_id).all()
+        return make_response([comment.to_dict() for comment in comments], 200)
+    
+    def post(self):
+        json = request.get_json()
+        pet_id = json.get('pet_id')
+        content = json.get('content')
+        user_id = json.get('user_id')
+        comment = Comment(pet_id=pet_id, content=content, user_id=user_id)
+        return make_response(comment.to_dict(), 200)
+    
+    def patch(self):
+        json = request.get_json()
+        id = json.get('id')
+        comment = Comment.query.filter(Comment.id == id).first()
+        content = json.get('content')
+        comment.content = content
+        db.session.add(comment)
+        db.session.commit()
+        return make_response(comment.to_dict(), 200)
+    
+    def delete(self):
+        json = request.get_json()
+        id = json.get('id')
+        comment = Comment.query.filter(Comment.id == id).first()
+        db.session.delete(comment)
+        db.session.commit()
+        return {'message': 'Comment successfully deleted'}, 200
+
 
 @app.route('/')
 def index():
@@ -138,6 +172,7 @@ api.add_resource(Signin, '/signin', endpoint='signin')
 api.add_resource(Signout, '/signout', endpoint='signout')
 api.add_resource(Petform, '/petform', endpoint='petform')
 api.add_resource(Sighting, '/sighting', endpoint='sighting')
+api.add_resource(Comment, '/comment', endpoint='comment')
 api.add_resource(CheckSession, '/checksession')
 
 
