@@ -80,6 +80,14 @@ function SinglePet({user}) {
         <button onClick = {handleDeleteClick} >Delete</button>
         <button onClick = {handleSightingsClick}>View Sightings</button>
         <p>{message}</p>
+        <div>
+            {data.pet.comments.map((comment) => 
+                <div key={comment.id}>
+                <h1>{comment.user.username}</h1>
+                <p>{comment.content}</p>
+                </div>
+            )}
+        </div>
         </>
     );
 

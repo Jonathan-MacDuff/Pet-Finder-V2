@@ -18,7 +18,7 @@ function App() {
     fetch('/checksession')
     .then((r) => r.json())
     .then((data) => setUser(data))
-  });
+  }, []);
 
 
   return (

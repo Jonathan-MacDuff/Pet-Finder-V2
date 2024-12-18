@@ -9,7 +9,7 @@ class User(db.Model, SerializerMixin):
 
     __tablename__ = 'users'
 
-    serialize_rules = ('-reports.user',)
+    serialize_rules = ('-reports.user', '-comments.user',)
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
@@ -22,7 +22,7 @@ class Pet(db.Model, SerializerMixin):
 
     __tablename__ = 'pets'
 
-    serialize_rules = ('-reports.pet',)
+    serialize_rules = ('-reports.pet', '-comments.pet',)
     
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
@@ -52,7 +52,7 @@ class Comment(db.Model, SerializerMixin):
     
     __tablename__ = 'comments'
 
-    serialize_rules = ('-user.comments', '-pet.comments')
+    serialize_rules = ('-user.comments', '-pet.comments', '-user.reports', '-pet.reports',)
 
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String, nullable=False)

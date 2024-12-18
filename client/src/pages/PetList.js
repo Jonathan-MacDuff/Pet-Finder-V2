@@ -9,6 +9,7 @@ function PetList() {
         fetch("/pets")
             .then((r) => r.json())
             .then((petData) => {
+                console.log('Fetched pet data:', petData);
                 const petsWithReports = petData.map(pet => ({
                     pet,
                     report: pet.reports[0]
@@ -19,9 +20,11 @@ function PetList() {
     }, []);
 
     return (
-        pets.map(({pet, report}) => (
-            <Pet pet={pet} report={report} key={pet.id}></Pet>
-        ))
+        <div>
+            {pets.map(({pet, report}) => (
+                <Pet pet={pet} report={report} key={pet.id}></Pet>
+            ))}
+        </div>
     )
 };
 
