@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { React, useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 
 
@@ -8,6 +10,7 @@ function SinglePet({user}) {
     const navigate = useHistory();
     const [data, setData] = useState(null);
     const [message, setMessage] = useState('');
+    const [username, setUsername] = useState(user.username)
 
     useEffect(() => {
         fetch(`/petform?id=${id}`)
@@ -66,6 +69,31 @@ function SinglePet({user}) {
         else setMessage("Please log in as this pet's user to view it's sightings")
     };
 
+    //
+    const formSchema = yup.object().shape({
+        // username: user.username,
+        comment: yup.string().required('Comment can not be blank').max(100)
+    });
+
+    const formik = useFormik({
+        initialValues: {
+        // username: user.username,
+        comment: '',
+        },
+        validationSchema:formSchema,
+        onSubmit: (values) => {
+            fetch('/comment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(values, null, 2),
+            })
+            .then((r) => r.json())
+            .then(() => setMessage(`Comment posted successfully.`)) 
+        },
+    });
+    //
 
     if (!data) return <div>Loading...</div>
 
@@ -88,6 +116,14 @@ function SinglePet({user}) {
                 </div>
             )}
         </div>
+        <form onSubmit={formik.handleSubmit}>
+            <label>Comment</label>
+            <br/>
+            <input type='text' id='comment' name='comment' value={formik.values.comment}
+            onChange={formik.handleChange}></input>
+            <br/>
+            <button type='submit'>Post</button>
+        </form>
         </>
     );
 
