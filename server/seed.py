@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
 # Standard library imports
+import random
 from random import randint, choice as rc
+from datetime import datetime, timedelta
+
 
 # Remote library imports
 from faker import Faker
@@ -9,7 +12,7 @@ from faker import Faker
 # Local imports
 from app import app
 from config import db
-from models import User, Pet, Report, Comment
+from models import User, Pet, Report, Comment, Message
 
 if __name__ == '__main__':
     fake = Faker()
@@ -76,6 +79,19 @@ if __name__ == '__main__':
                 )
                 comments.append(comment)
         db.session.add_all(comments)
+
+        print("Generating messages...")
+        messages = []
+        for i in range (2):
+            for user in users:
+                message = Message(
+                    content=fake.paragraph(nb_sentences=2),
+                    timestamp=datetime.utcnow() - timedelta(days=random.randint(0, 30)),
+                    sender_id=user.id,
+                    recipient_id=rc([user.id for user in User.query.all()])
+                )
+                messages.append(message)
+        db.session.add_all(messages)
 
 
         db.session.commit()

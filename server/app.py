@@ -4,7 +4,7 @@ from flask import request, make_response, jsonify
 from flask_restful import Resource
 
 from config import app, db, api, session
-from models import User, Pet, Report, Comment
+from models import User, Pet, Report, Comment, Message
 
 
 
