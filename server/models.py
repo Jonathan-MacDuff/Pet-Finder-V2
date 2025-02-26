@@ -9,7 +9,7 @@ class User(db.Model, SerializerMixin):
 
     __tablename__ = 'users'
 
-    serialize_rules = ('-reports.user', '-comments.user', '-messages_sent.sender', '-messages_received.recipient',)
+    serialize_rules = ('-reports.user', '-comments.user', '-messages_sent', '-messages_received',)
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
