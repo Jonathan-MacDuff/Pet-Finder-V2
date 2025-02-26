@@ -6,7 +6,7 @@ function PetList() {
     const [pets, setPets] = useState([]);
 
     useEffect(() => {
-        fetch("/pets")
+        fetch('/pets')
             .then((r) => r.json())
             .then((petData) => {
                 console.log('Fetched pet data:', petData);

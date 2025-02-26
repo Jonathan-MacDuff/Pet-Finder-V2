@@ -2,6 +2,7 @@
 
 from flask import request, make_response, jsonify
 from flask_restful import Resource
+from sqlalchemy import or_
 
 from config import app, db, api, session
 from models import User, Pet, Report, Comment, Message
@@ -164,7 +165,10 @@ class Comment(Resource):
 class Messages(Resource):
 
     def get(self):
-        return {}, 200
+        user_id = session['user_id']
+        messages = Message.query.filter(
+            or_(Message.recipient_id == user_id, Message.sender_id == user_id)).all()
+        return jsonify([message.to_dict() for message in messages])
 
 
 @app.route('/')
