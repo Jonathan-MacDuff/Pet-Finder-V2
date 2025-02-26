@@ -31,6 +31,7 @@ api = Api(app)
 # Instantiate CORS
 CORS(app)
 
+# Instantiate SocketIO
 socketio = SocketIO(app)
 app.json.compact = False
 

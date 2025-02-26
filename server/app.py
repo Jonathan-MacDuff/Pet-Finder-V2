@@ -160,6 +160,11 @@ class Comment(Resource):
         db.session.delete(comment)
         db.session.commit()
         return {'message': 'Comment successfully deleted'}, 200
+    
+class Messages(Resource):
+
+    def get(self):
+        return {}, 200
 
 
 @app.route('/')
@@ -173,6 +178,7 @@ api.add_resource(Signout, '/signout', endpoint='signout')
 api.add_resource(Petform, '/petform', endpoint='petform')
 api.add_resource(Sighting, '/sighting', endpoint='sighting')
 api.add_resource(Comment, '/comment', endpoint='comment')
+api.add_resource(Messages, '/messages', endpoint='messages')
 api.add_resource(CheckSession, '/checksession')
 
 
