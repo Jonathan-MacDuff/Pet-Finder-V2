@@ -8,6 +8,7 @@ import Signin from "../pages/Signin";
 import PetUpdateForm from "./PetUpdateForm";
 import SinglePet from "./SinglePet";
 import PetSightings from "./PetSightings";
+import Messages from "../pages/Messages";
 import { useEffect, useState } from "react";
 
 function App() {
@@ -49,6 +50,9 @@ function App() {
           </Route>
           <Route path='/sighting/:id'>
             <PetSightings />
+          </Route>
+          <Route path='/messages'>
+            <Messages />
           </Route>
         </Switch>
       </main>

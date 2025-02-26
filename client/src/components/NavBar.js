@@ -20,6 +20,7 @@ function NavBar() {
             <Link to="/signin">Sign In</Link>           
             <Link to="/pets">Pets</Link>
             <Link to="/petform">New Pet</Link>
+            <Link to="/messages">Messages</Link>
             <button onClick={handleSignout}>Signout</button> 
         </nav>
     );
