@@ -52,7 +52,7 @@ function App() {
             <PetSightings />
           </Route>
           <Route path='/messages'>
-            <Messages />
+            <Messages user={user}/>
           </Route>
         </Switch>
       </main>
