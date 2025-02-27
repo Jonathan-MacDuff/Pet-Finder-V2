@@ -9,6 +9,7 @@ import PetUpdateForm from "./PetUpdateForm";
 import SinglePet from "./SinglePet";
 import PetSightings from "./PetSightings";
 import Messages from "../pages/Messages";
+import Conversation from "./Conversation";
 import { useEffect, useState } from "react";
 
 function App() {
@@ -53,6 +54,9 @@ function App() {
           </Route>
           <Route path='/messages'>
             <Messages user={user}/>
+          </Route>
+          <Route path='/conversation/:otherId'>
+            <Conversation user={user}/>
           </Route>
         </Switch>
       </main>
