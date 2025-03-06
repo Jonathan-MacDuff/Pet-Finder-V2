@@ -10,34 +10,37 @@ const socket = io("http://localhost:5555", {
 function Conversation({user}) {
 
     const { otherId } = useParams();
-    const userId = user.id;
     const [messages, setMessages] = useState([]);
     const [messageContent, setMessageContent] = useState('');
 
+    const userId = user ? user.id : null;
+
     useEffect(() => {
-        fetch('/messages')
-        .then((r) => r.json())
-        .then((messageData) => {
-            const relevantMessages = []
-            messageData.forEach((message) => {
-                if (
-                    (message.recipient_id === userId || message.sender_id === userId) &&
-                    (message.recipient_id === parseInt(otherId) || message.sender_id === parseInt(otherId))
-                ) {relevantMessages.push(message)}
+        if (userId && otherId) {
+            fetch('/messages')
+            .then((r) => r.json())
+            .then((messageData) => {
+                const relevantMessages = []
+                messageData.forEach((message) => {
+                    if (
+                        (message.recipient_id === userId || message.sender_id === userId) &&
+                        (message.recipient_id === parseInt(otherId) || message.sender_id === parseInt(otherId))
+                    ) {relevantMessages.push(message)}
+                });
+                relevantMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                setMessages(relevantMessages)
             });
-            relevantMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-            setMessages(relevantMessages)
-        });
 
-        socket.on('message', (newMessage) => {
-            setMessages((prevMessages) => [...prevMessages, newMessage]);
-        });
+            socket.on('message', (newMessage) => {
+                setMessages((prevMessages) => [...prevMessages, newMessage]);
+            });
 
-        return () => {
-            socket.off('message');
+            return () => {
+                socket.off('message');
+            };
         };
 
-    }, [userId, otherId]);
+        }, [userId, otherId]);
 
     const formatTimestamp = (timestamp) => {
         return new Date(timestamp).toLocaleString("en-US", {
