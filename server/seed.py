@@ -27,6 +27,8 @@ if __name__ == '__main__':
         Report.query.delete()
         print("Deleting all comments")
         Comment.query.delete()
+        print("Deleting all messages")
+        Message.query.delete()
 
         print("Generating users...")
         users = []
@@ -38,7 +40,7 @@ if __name__ == '__main__':
             usernames.append(username)
             user = User(
                 username=username, 
-                password=fake.word()
+                password=username
                 )
             users.append(user)
         db.session.add_all(users)

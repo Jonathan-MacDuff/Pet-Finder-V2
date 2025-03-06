@@ -4,7 +4,7 @@ from flask import request, make_response, jsonify
 from flask_restful import Resource
 from sqlalchemy import or_
 
-from config import app, db, api, session
+from config import app, db, api, session, socketio
 from models import User, Pet, Report, Comment, Message
 
 
@@ -187,5 +187,5 @@ api.add_resource(CheckSession, '/checksession')
 
 
 if __name__ == '__main__':
-    app.run(port=5555, debug=True)
+    socketio.run(app, debug=True, port=5555)
 

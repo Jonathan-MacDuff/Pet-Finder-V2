@@ -39,23 +39,32 @@ function Conversation({user}) {
 
     }, [userId, otherId]);
 
+    const formatTimestamp = (timestamp) => {
+        return new Date(timestamp).toLocaleString("en-US", {
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+        }).replace(",", "");
+    };
+
 
     const handleSendMessage = (e) => {
         e.preventDefault();
 
         if (messageContent.trim()) {
             const newMessage = {
+                id: Date.now(), // Temporary ID
                 sender_id: userId,
                 recipient_id: parseInt(otherId),
                 content: messageContent,
-                timestamp: '',
+                timestamp: new Date().toISOString(),
                 sender: user
             };
             console.log(newMessage)
 
             socket.emit('message', newMessage);
-
-            setMessages((prevMessages) => [...prevMessages, newMessage]);
             
             setMessageContent('');
         }
@@ -66,7 +75,7 @@ function Conversation({user}) {
         <div>
             {messages.map((message) => (
                 <div key={message.id}>
-                    {message.timestamp} {message.sender.username}: {message.content}
+                    {formatTimestamp(message.timestamp)} {message.sender.username}: {message.content}
                 </div>
             ))}
             <form onSubmit={handleSendMessage}>

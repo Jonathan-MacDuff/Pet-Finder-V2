@@ -75,7 +75,7 @@ class Message(db.Model, SerializerMixin):
     sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     recipient_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    timestamp = db.Column(db.DateTime, server_default=db.func.now())
+    timestamp = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
 
     sender = db.relationship('User', foreign_keys=[sender_id], back_populates='messages_sent')
     recipient = db.relationship('User', foreign_keys=[recipient_id], back_populates='messages_received')
