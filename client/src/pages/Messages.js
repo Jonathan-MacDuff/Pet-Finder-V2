@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import { useHistory } from "react-router-dom";
+import { UserContext } from "../context/user";
 
-function Messages({user}) {
+function Messages() {
 
+    const user = useContext(UserContext);
     const [messages, setMessages] = useState([]);
     const navigate = useHistory();
 

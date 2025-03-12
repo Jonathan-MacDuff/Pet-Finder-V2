@@ -11,6 +11,7 @@ import PetSightings from "./PetSightings";
 import Messages from "../pages/Messages";
 import Conversation from "./Conversation";
 import { useEffect, useState } from "react";
+import { UserProvider } from "../context/user";
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
     .then((r) => r.json())
     .then((data) => setUser(data))
   }, []);
+
 
 
   return (
@@ -43,21 +45,23 @@ function App() {
           <Route path="/petform">
             <NewPetForm />
           </Route>
-          <Route path="/singlepet/:id">
-            <SinglePet user={user}/>
-          </Route>
-          <Route path='/petupdate/:id'>
-            <PetUpdateForm user={user}/>
-          </Route>
           <Route path='/sighting/:id'>
             <PetSightings />
           </Route>
-          <Route path='/messages'>
-            <Messages user={user}/>
-          </Route>
-          <Route path='/conversation/:otherId'>
-            <Conversation user={user}/>
-          </Route>
+          <UserProvider>
+            <Route path="/singlepet/:id">
+              <SinglePet user={user}/>
+            </Route>
+            <Route path='/petupdate/:id'>
+              <PetUpdateForm user={user}/>
+            </Route>
+            <Route path='/messages'>
+              <Messages/>
+            </Route>
+            <Route path='/conversation/:otherId'>
+              <Conversation user={user}/>
+            </Route>
+          </UserProvider>
         </Switch>
       </main>
     </>
