@@ -10,6 +10,7 @@ import SinglePet from "./SinglePet";
 import PetSightings from "./PetSightings";
 import Messages from "../pages/Messages";
 import Conversation from "./Conversation";
+import MyPets from "../pages/MyPets";
 import { useEffect, useContext } from "react";
 import { UserProvider, UserContext } from "../context/user";
 
@@ -46,6 +47,9 @@ function MainContent() {
           <Route path='/signin'>
             <Signin />
           </Route>
+          <Route path='/mypets'>
+            <MyPets />
+          </Route>
           <Route path="/pets">
             <PetList />
           </Route>
@@ -67,7 +71,6 @@ function MainContent() {
           <Route path='/conversation/:otherId'>
             <Conversation/>
           </Route>
-
         </Switch>
       </main>
     </>

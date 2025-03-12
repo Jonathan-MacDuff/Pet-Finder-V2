@@ -9,7 +9,6 @@ function PetList() {
         fetch('/pets')
             .then((r) => r.json())
             .then((petData) => {
-                console.log('Fetched pet data:', petData);
                 const petsWithReports = petData.map(pet => ({
                     pet,
                     report: pet.reports[0]

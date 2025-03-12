@@ -12,7 +12,7 @@ function SinglePet() {
     const navigate = useHistory();
     const [data, setData] = useState(null);
     const [message, setMessage] = useState('');
-
+    // const [username, setUsername] = useState(user.username)
 
     useEffect(() => {
         fetch(`/petform?id=${id}`)
