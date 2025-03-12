@@ -10,24 +10,31 @@ import SinglePet from "./SinglePet";
 import PetSightings from "./PetSightings";
 import Messages from "../pages/Messages";
 import Conversation from "./Conversation";
-import { useEffect, useState } from "react";
-import { UserProvider } from "../context/user";
+import { useEffect, useContext } from "react";
+import { UserProvider, UserContext } from "../context/user";
 
 function App() {
+  return (
+    <UserProvider>
+      <NavBar/>
+      <MainContent/>
+    </UserProvider>
+  );
+}
 
-  const [user, setUser] = useState(null)
+function MainContent() {
+  const {setUser} = useContext(UserContext)
 
   useEffect(() => {
     fetch('/checksession')
     .then((r) => r.json())
     .then((data) => setUser(data))
-  }, []);
+  }, [setUser]);
 
 
 
   return (
     <>
-      <NavBar />
       <main>
         <Switch>
           <Route exact path="/">
@@ -48,24 +55,24 @@ function App() {
           <Route path='/sighting/:id'>
             <PetSightings />
           </Route>
-          <UserProvider>
-            <Route path="/singlepet/:id">
-              <SinglePet user={user}/>
-            </Route>
-            <Route path='/petupdate/:id'>
-              <PetUpdateForm user={user}/>
-            </Route>
-            <Route path='/messages'>
-              <Messages/>
-            </Route>
-            <Route path='/conversation/:otherId'>
-              <Conversation user={user}/>
-            </Route>
-          </UserProvider>
+          <Route path="/singlepet/:id">
+            <SinglePet/>
+          </Route>
+          <Route path='/petupdate/:id'>
+            <PetUpdateForm/>
+          </Route>
+          <Route path='/messages'>
+            <Messages/>
+          </Route>
+          <Route path='/conversation/:otherId'>
+            <Conversation/>
+          </Route>
+
         </Switch>
       </main>
     </>
   )
 }
+
 
 export default App;

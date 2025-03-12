@@ -1,16 +1,18 @@
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useContext } from "react";
 import { useHistory, useParams } from "react-router-dom";
+import { UserContext } from "../context/user";
 
 
-function SinglePet({user}) {
+function SinglePet() {
 
+    const {user} = useContext(UserContext)
     const { id } = useParams();
     const navigate = useHistory();
     const [data, setData] = useState(null);
     const [message, setMessage] = useState('');
-    // const [username, setUsername] = useState(user.username)
+
 
     useEffect(() => {
         fetch(`/petform?id=${id}`)

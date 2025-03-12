@@ -4,7 +4,7 @@ import { UserContext } from "../context/user";
 
 function Messages() {
 
-    const user = useContext(UserContext);
+    const {user} = useContext(UserContext);
     const [messages, setMessages] = useState([]);
     const navigate = useHistory();
 

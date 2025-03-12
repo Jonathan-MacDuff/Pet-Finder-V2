@@ -1,11 +1,13 @@
-import {React, useState, useEffect} from "react";
+import {React, useState, useEffect, useContext} from "react";
 import { useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { UserContext } from "../context/user";
 
 
-function PetUpdateForm({user}) {
+function PetUpdateForm() {
 
+    const {user} = useContext(UserContext)
     const { id } = useParams();
     const [data, setData] = useState(null);
     const [message, setMessage] = useState('');

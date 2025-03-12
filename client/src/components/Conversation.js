@@ -1,14 +1,16 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import { useParams } from "react-router-dom";
 import {io} from "socket.io-client";
+import { UserContext } from "../context/user";
 
 const socket = io("http://localhost:5555", {
     transports: ["websocket"],
   });
 
 
-function Conversation({user}) {
-
+function Conversation() {
+    
+    const {user} = useContext(UserContext);
     const { otherId } = useParams();
     const [messages, setMessages] = useState([]);
     const [messageContent, setMessageContent] = useState('');
