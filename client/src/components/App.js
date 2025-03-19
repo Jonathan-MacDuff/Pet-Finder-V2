@@ -21,7 +21,7 @@ function App() {
       <MainContent/>
     </UserProvider>
   );
-}
+};
 
 function MainContent() {
   const {setUser} = useContext(UserContext)

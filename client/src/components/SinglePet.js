@@ -7,7 +7,7 @@ import { UserContext } from "../context/user";
 
 function SinglePet() {
 
-    const {user} = useContext(UserContext)
+    const {user, deletePet} = useContext(UserContext)
     const { id } = useParams();
     const navigate = useHistory();
     const [data, setData] = useState(null);
@@ -18,7 +18,6 @@ function SinglePet() {
         fetch(`/petform?id=${id}`)
         .then((r) => r.json())
         .then((data) => {
-            console.log(data);
             setData(data)
         })
         .catch((error) => {
@@ -45,7 +44,10 @@ function SinglePet() {
                 },
                 body: JSON.stringify({id}),
             })
-            .then(() => {setMessage('Pet deleted successfully')})
+            .then(() => {
+                deletePet(id)
+                setMessage('Pet deleted successfully')})
+                navigate.push('/mypets')
         }
         else setMessage("Please log in as this pet's user to delete it")
         };

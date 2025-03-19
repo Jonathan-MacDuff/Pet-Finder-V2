@@ -38,7 +38,10 @@ function NewPetForm() {
                 },
                 body: JSON.stringify(values, null, 2),
             })
-            .then(() => setMessage('Pet created successfully'))
+            .then(() => {
+                
+                setMessage('Pet created successfully')
+            })
         }
     });
 
