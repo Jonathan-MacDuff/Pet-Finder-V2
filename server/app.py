@@ -81,7 +81,7 @@ class Petform(Resource):
         new_report = Report(user_id=session['user_id'],pet_id=new_pet.id,report_type=('lost' if lost else 'found'))
         db.session.add(new_report)
         db.session.commit()
-        return make_response(new_pet.to_dict(), 200)
+        return make_response(new_report.to_dict(), 200)
     
     def patch(self):
         json = request.get_json()

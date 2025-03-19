@@ -1,9 +1,11 @@
-import {React, useState} from "react";
+import {React, useState, useContext} from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { UserContext } from "../context/user";
 
 function NewPetForm() {
 
+    const {addPet} = useContext(UserContext)
     const [message, setMessage] = useState('');
 
     const formSchema = yup.object().shape({
@@ -38,8 +40,9 @@ function NewPetForm() {
                 },
                 body: JSON.stringify(values, null, 2),
             })
-            .then(() => {
-                
+            .then((response) => response.json())
+            .then((newReport) => {
+                addPet(newReport)
                 setMessage('Pet created successfully')
             })
         }

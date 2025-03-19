@@ -6,9 +6,12 @@ const UserContext = React.createContext();
 function UserProvider({ children }) {
     const [user, setUser] = useState(null);
     
-    // function addPet() {
-
-    // }
+    function addPet(newReport) {
+        setUser(prevUser => ({
+            ...prevUser,
+            reports: [...prevUser.reports, newReport]
+        }))
+    }
 
     // function updatePet() {
 
@@ -21,7 +24,7 @@ function UserProvider({ children }) {
             reports: [...updatedReports]
         }));
     };
-    return <UserContext.Provider value={{ user, setUser, deletePet }}>{children}</UserContext.Provider>;
+    return <UserContext.Provider value={{ user, setUser, deletePet, addPet }}>{children}</UserContext.Provider>;
 }
 
 export { UserContext, UserProvider };
