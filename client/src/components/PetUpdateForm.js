@@ -7,7 +7,7 @@ import { UserContext } from "../context/user";
 
 function PetUpdateForm() {
 
-    const {user} = useContext(UserContext)
+    const {user, updatePet} = useContext(UserContext)
     const { id } = useParams();
     const [data, setData] = useState(null);
     const [message, setMessage] = useState('');
@@ -55,9 +55,14 @@ function PetUpdateForm() {
                     },
                     body: JSON.stringify(values, null, 2),
                 })
-                .then(() => setMessage("Pet updated successfully"))
+                .then((response) => response.json())
+                .then((updatedReport) => {
+                    updatePet(updatedReport)
+                    setMessage("Pet updated successfully")
+                })
+            } else {
+                setMessage('Unauthorized, please log in to continue')
             }
-            else setMessage('Unauthorized, please log in to continue')
         }
     });
 

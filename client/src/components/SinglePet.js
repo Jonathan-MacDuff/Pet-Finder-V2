@@ -7,7 +7,7 @@ import { UserContext } from "../context/user";
 
 function SinglePet() {
 
-    const {user, deletePet} = useContext(UserContext)
+    const {user, deletePet, updatePet} = useContext(UserContext)
     const { id } = useParams();
     const navigate = useHistory();
     const [data, setData] = useState(null);

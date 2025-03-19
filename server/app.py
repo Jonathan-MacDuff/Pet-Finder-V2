@@ -101,7 +101,7 @@ class Petform(Resource):
         db.session.add(pet)
         db.session.add(report)
         db.session.commit()
-        return make_response(pet.to_dict(), 200)
+        return make_response(report.to_dict(), 200)
     
     def delete(self):
         json = request.get_json()

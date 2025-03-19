@@ -10,12 +10,18 @@ function UserProvider({ children }) {
         setUser(prevUser => ({
             ...prevUser,
             reports: [...prevUser.reports, newReport]
-        }))
-    }
+        }));
+    };
 
-    // function updatePet() {
-
-    // }
+    function updatePet(updatedReport) {
+        const updatedReports = user.reports.map(report =>
+            report.id === updatedReport.id ? updatedReport : report
+        );
+        setUser(prevUser => ({
+            ...prevUser,
+            reports: [...updatedReports]
+        }));
+    };
 
     function deletePet(id) {
         const updatedReports = user.reports.filter(report => report.pet.id !== Number(id));
@@ -24,7 +30,7 @@ function UserProvider({ children }) {
             reports: [...updatedReports]
         }));
     };
-    return <UserContext.Provider value={{ user, setUser, deletePet, addPet }}>{children}</UserContext.Provider>;
+    return <UserContext.Provider value={{ user, setUser, deletePet, addPet, updatePet }}>{children}</UserContext.Provider>;
 }
 
 export { UserContext, UserProvider };
