@@ -1,4 +1,4 @@
-import { Switch, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import NavBar from "./NavBar";
 import PetList from "../pages/PetList";
 import NewPetForm from "../pages/NewPetForm";
@@ -35,46 +35,22 @@ function MainContent() {
 
 
   return (
-    <>
-      <main>
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route path='/signup'>
-            <Signup />
-          </Route>
-          <Route path='/signin'>
-            <Signin />
-          </Route>
-          <Route path='/mypets'>
-            <MyPets />
-          </Route>
-          <Route path="/pets">
-            <PetList />
-          </Route>
-          <Route path="/petform">
-            <NewPetForm />
-          </Route>
-          <Route path='/sighting/:id'>
-            <PetSightings />
-          </Route>
-          <Route path="/singlepet/:id">
-            <SinglePet/>
-          </Route>
-          <Route path='/petupdate/:id'>
-            <PetUpdateForm/>
-          </Route>
-          <Route path='/messages'>
-            <Messages/>
-          </Route>
-          <Route path='/conversation/:otherId'>
-            <Conversation/>
-          </Route>
-        </Switch>
-      </main>
-    </>
-  )
+    <main>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/mypets" element={<MyPets />} />
+        <Route path="/pets" element={<PetList />} />
+        <Route path="/petform" element={<NewPetForm />} />
+        <Route path="/sighting/:id" element={<PetSightings />} />
+        <Route path="/singlepet/:id" element={<SinglePet />} />
+        <Route path="/petupdate/:id" element={<PetUpdateForm />} />
+        <Route path="/messages" element={<Messages />} />
+        <Route path="/conversation/:otherId" element={<Conversation />} />
+      </Routes>
+    </main>
+  );
 }
 
 

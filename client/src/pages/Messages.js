@@ -1,12 +1,12 @@
 import React, {useEffect, useState, useContext} from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user";
 
 function Messages() {
 
     const {user} = useContext(UserContext);
     const [messages, setMessages] = useState([]);
-    const navigate = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -46,7 +46,7 @@ function Messages() {
 
                 return (
                 <div key={message.id} 
-                onClick={() => navigate.push(`/conversation/${otherUserId}`)} 
+                onClick={() => navigate(`/conversation/${otherUserId}`)} 
                 style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
                     <p>From: {message.sender.username}</p>
                     <p>To: {message.recipient.username}</p>

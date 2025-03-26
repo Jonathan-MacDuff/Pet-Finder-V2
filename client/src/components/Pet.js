@@ -1,14 +1,14 @@
 import React from "react";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 
 function Pet({pet, report}) {
 
-    const navigate = useHistory();
+    const navigate = useNavigate();
     const id = pet.id;
 
     function handlePetClick() {
-        navigate.push(`/singlepet/${id}`)
+        navigate(`/singlepet/${id}`)
     };
 
     return (

@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { React, useState, useEffect, useContext } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../context/user";
 
 
@@ -9,7 +9,7 @@ function SinglePet() {
 
     const {user, deletePet} = useContext(UserContext)
     const { id } = useParams();
-    const navigate = useHistory();
+    const navigate = useNavigate();
     const [data, setData] = useState(null);
     const [message, setMessage] = useState('');
 
@@ -29,7 +29,7 @@ function SinglePet() {
     function handleUpdateClick(event) {
         event.preventDefault()
         if (user.id === data.report.user.id) {
-            navigate.push(`/petupdate/${id}`)
+            navigate(`/petupdate/${id}`)
         }
         else setMessage("Please log in as this pet's user to update it")
     };       
@@ -47,7 +47,7 @@ function SinglePet() {
             .then(() => {
                 deletePet(id)
                 setMessage('Pet deleted successfully')})
-                navigate.push('/mypets')
+                navigate('/mypets')
         }
         else setMessage("Please log in as this pet's user to delete it")
         };
@@ -68,7 +68,7 @@ function SinglePet() {
     function handleSightingsClick(event) {
         event.preventDefault();
         if (user.id === data.report.user.id) {
-            navigate.push(`/sighting/${id}`)
+            navigate(`/sighting/${id}`)
         }
         else setMessage("Please log in as this pet's user to view it's sightings")
     };
