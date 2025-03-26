@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {io} from "socket.io-client";
 import { UserContext } from "../context/user";
 
@@ -14,10 +14,15 @@ function Conversation() {
     const { otherId } = useParams();
     const [messages, setMessages] = useState([]);
     const [messageContent, setMessageContent] = useState('');
+    const navigate = useNavigate()
 
     const userId = user ? user.id : null;
 
     useEffect(() => {
+        if (user.message) {
+            navigate('/');
+            return;
+        }
         if (userId && otherId) {
             fetch('/messages')
             .then((r) => r.json())
@@ -42,7 +47,7 @@ function Conversation() {
             };
         };
 
-        }, [userId, otherId]);
+        }, [userId, otherId, navigate, user.message]);
 
     const formatTimestamp = (timestamp) => {
         return new Date(timestamp).toLocaleString("en-US", {

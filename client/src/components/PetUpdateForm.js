@@ -1,5 +1,5 @@
 import {React, useState, useEffect, useContext} from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { UserContext } from "../context/user";
@@ -11,14 +11,19 @@ function PetUpdateForm() {
     const { id } = useParams();
     const [data, setData] = useState(null);
     const [message, setMessage] = useState('');
+    const navigate = useNavigate()
 
     useEffect(() => {
+        if (user.message) {
+            navigate('/');
+            return;
+        }
         fetch(`/petform?id=${id}`)
         .then((r) => r.json())
         .then((data) => {
             console.log(data);
             setData(data)});
-    }, [id]);
+    }, [id, navigate, user.message]);
 
     const formSchema = yup.object().shape({
         name: yup.string().required('Name is required, enter "N/A" if unknown').max(20),

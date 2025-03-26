@@ -1,12 +1,21 @@
-import {React, useState, useContext} from "react";
+import {React, useState, useContext, useEffect} from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { UserContext } from "../context/user";
+import { useNavigate } from "react-router-dom";
 
 function NewPetForm() {
 
-    const {addPet} = useContext(UserContext)
+    const {addPet, user} = useContext(UserContext);
     const [message, setMessage] = useState('');
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (user.message) {
+            navigate('/');
+            return;
+        }
+    }, [navigate, user.message])
 
     const formSchema = yup.object().shape({
         name: yup.string().required('Name is required, enter "N/A" if unknown').max(20),
