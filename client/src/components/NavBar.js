@@ -4,7 +4,7 @@ import { UserContext } from "../context/user";
 
 function NavBar() {
 
-    const {user, setUser} = useContext(UserContext);
+    const {user, setUser, checkSession } = useContext(UserContext);
     const navigate = useNavigate();
 
     function handleSignout() {
@@ -15,7 +15,12 @@ function NavBar() {
           },
           body: JSON.stringify(),
         })
-        .then(() => setUser({}));
+        .then((r) => r.json())
+        .then((data) => {
+            setUser(data)
+            checkSession()
+            navigate('/')
+        });
       };
 
       function handleSignUp() {

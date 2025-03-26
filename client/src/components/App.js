@@ -11,19 +11,9 @@ import PetSightings from "./PetSightings";
 import Messages from "../pages/Messages";
 import Conversation from "./Conversation";
 import MyPets from "../pages/MyPets";
-import { useEffect, useContext } from "react";
-import { UserContext } from "../context/user";
+
 
 function App() {
-
-  const {setUser} = useContext(UserContext)
-
-  useEffect(() => {
-    fetch('/checksession')
-    .then((r) => r.json())
-    .then((data) => setUser(data))
-  }, [setUser]);
-
   return (
       <main>
         <NavBar/>

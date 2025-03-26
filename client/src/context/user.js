@@ -1,10 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const UserContext = React.createContext();
 
 
 function UserProvider({ children }) {
     const [user, setUser] = useState({});
+
+    function checkSession() {
+        fetch('/checksession')
+        .then((r) => r.json())
+        .then((data) => setUser(data))
+    }
+
+    useEffect(() => {
+        checkSession()
+      }, []);
     
     function addPet(newReport) {
         setUser(prevUser => ({
@@ -30,7 +40,7 @@ function UserProvider({ children }) {
             reports: [...updatedReports]
         }));
     };
-    return <UserContext.Provider value={{ user, setUser, deletePet, addPet, updatePet }}>{children}</UserContext.Provider>;
+    return <UserContext.Provider value={{ user, setUser, deletePet, addPet, updatePet, checkSession }}>{children}</UserContext.Provider>;
 }
 
 export { UserContext, UserProvider };

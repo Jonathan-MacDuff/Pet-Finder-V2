@@ -12,12 +12,20 @@ function Messages() {
 
     useEffect(() => {
 
-        if (!user) return;
+        if (user.message) {
+            navigate('/');
+            return;
+        }
+
         const user_id = user.id;
 
         fetch('/messages')
         .then((r) => r.json())
         .then((messageData) => {
+            if (user.message) {
+                navigate('/');
+                return;
+            }
             const recentMessages = {};
 
             messageData.forEach((message) => {
@@ -34,7 +42,7 @@ function Messages() {
             });
             setMessages(Object.values(recentMessages));
         })
-    }, [user]);
+    }, [user, navigate]);
 
     function handleSubmit(e) {
         e.preventDefault()
