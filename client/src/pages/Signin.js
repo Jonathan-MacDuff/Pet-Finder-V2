@@ -1,10 +1,13 @@
-import {React, useState} from "react";
+import {React, useState, useContext} from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { UserContext } from "../context/user";
 
 function Signin() {
 
     const [message, setMessage] = useState('');
+        const {setUser} = useContext(UserContext);
+    
 
     const formSchema = yup.object().shape({
         username: yup.string().required('Username required').max(20),
@@ -29,6 +32,7 @@ function Signin() {
             .then((data) => {
                 if (data.username) {
                     setMessage(`Successfully logged in as ${data.username}`)
+                    setUser(data)
                 } else {
                     setMessage('Login failed, please try again')
                 }

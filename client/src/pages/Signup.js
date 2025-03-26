@@ -1,10 +1,12 @@
-import {React, useState} from "react";
+import {React, useState, useContext} from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { UserContext } from "../context/user";
 
 function Signup() {
 
     const [message, setMessage] = useState('');
+    const {setUser} = useContext(UserContext);
 
     const formSchema = yup.object().shape({
         username: yup.string().required('Username required').max(20),
@@ -26,7 +28,11 @@ function Signup() {
                 body: JSON.stringify(values, null, 2),
             })
             .then((r) => r.json())
-            .then(() => setMessage(`Account successfully created, logged in as ${formik.values.username}`)) 
+            .then((user) => {
+                setMessage(`Account successfully created, logged in as ${formik.values.username}`)
+                setUser(user)
+            })
+            
         },
     });
 
