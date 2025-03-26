@@ -62,9 +62,10 @@ function Messages() {
             body: JSON.stringify(messageData),
         })
         .then((r) => r.json())
-        .then(() => {
+        .then((newMessage) => {
             setMessageContent('');
             setRecipient('');
+            setMessages((prevMessages) => [newMessage, ...prevMessages])
         });        
     }
 
