@@ -67,7 +67,6 @@ function Conversation() {
                 timestamp: new Date().toISOString(),
                 sender: user
             };
-            console.log(newMessage)
 
             socket.emit('message', newMessage);
             

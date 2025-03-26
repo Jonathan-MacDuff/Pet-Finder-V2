@@ -4,7 +4,7 @@ from flask import request, make_response, jsonify
 from flask_restful import Resource
 from sqlalchemy import or_
 
-from config import app, db, api, session, socketio
+from config import app, db, api, session, socketio, datetime
 from models import User, Pet, Report, Comment, Message
 
 
@@ -172,6 +172,18 @@ class Messages(Resource):
         messages = Message.query.filter(
             or_(Message.recipient_id == user_id, Message.sender_id == user_id)).all()
         return jsonify([message.to_dict() for message in messages])
+    
+    def post(self):
+        json = request.get_json()
+        content = json.get('content')
+        timestamp = datetime.fromisoformat(json.get('timestamp').replace('Z', ''))
+        sender_id = json.get('sender_id')
+        recipient = User.query.filter(User.username == json.get('recipient')).first()
+        recipient_id = recipient.id
+        newMessage = Message(sender_id=sender_id, recipient_id=recipient_id, content=content, timestamp=timestamp)
+        db.session.add(newMessage)
+        db.session.commit()
+        return make_response(newMessage.to_dict(), 200)
 
 
 @app.route('/')
