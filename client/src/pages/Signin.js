@@ -1,4 +1,5 @@
 import {React, useState, useContext} from "react";
+import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { UserContext } from "../context/user";
@@ -6,7 +7,8 @@ import { UserContext } from "../context/user";
 function Signin() {
 
     const [message, setMessage] = useState('');
-        const {setUser} = useContext(UserContext);
+    const {setUser} = useContext(UserContext);
+    const navigate = useNavigate()
     
 
     const formSchema = yup.object().shape({
@@ -33,6 +35,7 @@ function Signin() {
                 if (data.username) {
                     setMessage(`Successfully logged in as ${data.username}`)
                     setUser(data)
+                    navigate('/')
                 } else {
                     setMessage('Login failed, please try again')
                 }

@@ -2,11 +2,13 @@ import {React, useState, useContext} from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { UserContext } from "../context/user";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
 
     const [message, setMessage] = useState('');
     const {setUser} = useContext(UserContext);
+    const navigate = useNavigate();
 
     const formSchema = yup.object().shape({
         username: yup.string().required('Username required').max(20),
@@ -31,6 +33,7 @@ function Signup() {
             .then((user) => {
                 setMessage(`Account successfully created, logged in as ${formik.values.username}`)
                 setUser(user)
+                navigate('/')
             })
             
         },
