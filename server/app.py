@@ -129,7 +129,7 @@ class Sighting(Resource):
         else:
             return {'message': 'Please log in to report a sighting'}, 422
         
-class Comment(Resource):
+class Comments(Resource):
 
     def get(self):
         pet_id = request.args.get('id')
@@ -141,8 +141,11 @@ class Comment(Resource):
         pet_id = json.get('pet_id')
         content = json.get('content')
         user_id = json.get('user_id')
-        comment = Comment(pet_id=pet_id, content=content, user_id=user_id)
+        comment = Comment(content=content, user_id=user_id, pet_id=pet_id)
+        db.session.add(comment)
+        db.session.commit()
         return make_response(comment.to_dict(), 200)
+
     
     def patch(self):
         json = request.get_json()
@@ -181,7 +184,7 @@ api.add_resource(Signin, '/signin', endpoint='signin')
 api.add_resource(Signout, '/signout', endpoint='signout')
 api.add_resource(Petform, '/petform', endpoint='petform')
 api.add_resource(Sighting, '/sighting', endpoint='sighting')
-api.add_resource(Comment, '/comment', endpoint='comment')
+api.add_resource(Comments, '/comment', endpoint='comment')
 api.add_resource(Messages, '/messages', endpoint='messages')
 api.add_resource(CheckSession, '/checksession')
 

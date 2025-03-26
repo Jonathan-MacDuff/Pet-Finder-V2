@@ -7,17 +7,17 @@ import { UserContext } from "../context/user";
 
 function SinglePet() {
 
-    const {user, deletePet, updatePet} = useContext(UserContext)
+    const {user, deletePet} = useContext(UserContext)
     const { id } = useParams();
     const navigate = useHistory();
     const [data, setData] = useState(null);
     const [message, setMessage] = useState('');
-    // const [username, setUsername] = useState(user.username)
 
     useEffect(() => {
         fetch(`/petform?id=${id}`)
         .then((r) => r.json())
         .then((data) => {
+            console.log(data)
             setData(data)
         })
         .catch((error) => {
@@ -73,16 +73,15 @@ function SinglePet() {
         else setMessage("Please log in as this pet's user to view it's sightings")
     };
 
-    //
     const formSchema = yup.object().shape({
-        // username: user.username,
-        comment: yup.string().required('Comment can not be blank').max(100)
+        content: yup.string().required('Comment can not be blank').max(100)
     });
 
     const formik = useFormik({
         initialValues: {
-        // username: user.username,
-        comment: '',
+        content: '',
+        user_id: user.id,
+        pet_id: id,
         },
         validationSchema:formSchema,
         onSubmit: (values) => {
@@ -94,10 +93,19 @@ function SinglePet() {
                 body: JSON.stringify(values, null, 2),
             })
             .then((r) => r.json())
-            .then(() => setMessage(`Comment posted successfully.`)) 
+            .then((newComment) => {
+                setData((prevData) => ({
+                    ...prevData,
+                    pet: {
+                        ...prevData.pet,
+                        comments: [...prevData.pet.comments, newComment]
+                    }
+                }));
+                setMessage('Comment posted successfully.');
+                formik.resetForm();
+            })
         },
     });
-    //
 
     if (!data) return <div>Loading...</div>
 
@@ -123,7 +131,7 @@ function SinglePet() {
         <form onSubmit={formik.handleSubmit}>
             <label>Comment</label>
             <br/>
-            <input type='text' id='comment' name='comment' value={formik.values.comment}
+            <input type='text' id='content' name='content' value={formik.values.content}
             onChange={formik.handleChange}></input>
             <br/>
             <button type='submit'>Post</button>
