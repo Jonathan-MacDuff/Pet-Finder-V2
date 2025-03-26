@@ -15,6 +15,7 @@ class User(db.Model, SerializerMixin):
     username = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String(8))
 
+    # pets = db.relationship('Pet', secondary='reports', viewonly=True)
     reports = db.relationship('Report', back_populates='user', cascade='all, delete-orphan')
     comments = db.relationship('Comment', back_populates='user', cascade='all, delete-orphan')
     messages_sent = db.relationship('Message', foreign_keys='Message.sender_id', back_populates='sender', cascade='all, delete-orphan')

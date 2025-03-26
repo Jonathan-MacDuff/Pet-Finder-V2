@@ -15,7 +15,7 @@ function NavBar() {
           },
           body: JSON.stringify(),
         })
-        .then(() => setUser(null));
+        .then(() => setUser({}));
       };
 
       function handleSignUp() {
@@ -26,7 +26,7 @@ function NavBar() {
         navigate("/signin");
     };
     
-    if (user === null)
+    if (user.message)
     
         return (
             <nav>

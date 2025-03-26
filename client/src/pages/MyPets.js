@@ -8,7 +8,7 @@ function MyPets() {
     const [pets, setPets] = useState([]);
 
     useEffect(() => {
-        if (!user) return
+        if (user.message) return
         const myPets = (user.reports
             .filter(report => report.type !== 'sighting')
             .map(report => ({pet: report.pet, report: report})))

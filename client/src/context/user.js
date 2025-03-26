@@ -4,7 +4,7 @@ const UserContext = React.createContext();
 
 
 function UserProvider({ children }) {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState({});
     
     function addPet(newReport) {
         setUser(prevUser => ({
