@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import PetList from "../pages/PetList";
 import NewPetForm from "../pages/NewPetForm";
@@ -29,6 +29,7 @@ function App() {
           <Route path="/petupdate/:id" element={<PetUpdateForm />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/conversation/:otherId" element={<Conversation />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
   );
