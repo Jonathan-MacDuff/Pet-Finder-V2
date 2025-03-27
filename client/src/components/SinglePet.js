@@ -54,6 +54,10 @@ function SinglePet() {
 
     function handleSightingClick(event) {
         event.preventDefault()
+        if (user.message) {
+            setMessage('Please log in to report a sighting');
+            return
+        };
         fetch('/sighting', {
             method: 'POST',
             headers: {
@@ -84,6 +88,10 @@ function SinglePet() {
         },
         validationSchema:formSchema,
         onSubmit: (values) => {
+            if (user.message) {
+                setMessage('Please log in to leave a comment');
+                return
+            };
             fetch('/comment', {
                 method: 'POST',
                 headers: {
