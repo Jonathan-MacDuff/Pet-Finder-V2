@@ -16,6 +16,7 @@ class User(db.Model, SerializerMixin):
     password = db.Column(db.String(8))
 
     # pets = db.relationship('Pet', secondary='reports', viewonly=True)
+    pets = association_proxy('reports', 'pet')
     reports = db.relationship('Report', back_populates='user', cascade='all, delete-orphan')
     comments = db.relationship('Comment', back_populates='user', cascade='all, delete-orphan')
     messages_sent = db.relationship('Message', foreign_keys='Message.sender_id', back_populates='sender', cascade='all, delete-orphan')
