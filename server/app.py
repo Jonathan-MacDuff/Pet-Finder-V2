@@ -14,6 +14,9 @@ class Signup(Resource):
         json=request.get_json()
         username = json.get('username')
         password = json.get('password')
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            return make_response({"error": "Username already taken"}, 400)
         new_user = User(username=username, password=password)
         db.session.add(new_user)
         db.session.commit()

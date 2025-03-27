@@ -31,6 +31,10 @@ function Signup() {
             })
             .then((r) => r.json())
             .then((user) => {
+                if (user.error) {
+                    setMessage(user.error)
+                    return
+                }
                 setMessage(`Account successfully created, logged in as ${formik.values.username}`)
                 setUser(user)
                 navigate('/')
