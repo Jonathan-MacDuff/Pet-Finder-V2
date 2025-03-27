@@ -16,22 +16,20 @@ function Conversation() {
     const [messageContent, setMessageContent] = useState('');
     const navigate = useNavigate()
 
-    const userId = user ? user.id : null;
-
     useEffect(() => {
         if (user.message) {
             navigate('/');
             return;
         }
-        if (userId && otherId) {
+        if (user.id && otherId) {
             fetch('/messages')
             .then((r) => r.json())
             .then((messageData) => {
                 const relevantMessages = []
                 messageData.forEach((message) => {
                     if (
-                        (message.recipient_id === userId || message.sender_id === userId) &&
-                        (message.recipient_id === parseInt(otherId) || message.sender_id === parseInt(otherId))
+                        (message.recipient.id === user.id || message.sender.id === user.id) &&
+                        (message.recipient.id === parseInt(otherId) || message.sender.id === parseInt(otherId))
                     ) {relevantMessages.push(message)}
                 });
                 relevantMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
@@ -50,7 +48,7 @@ function Conversation() {
             };
         };
 
-        }, [userId, otherId, navigate, user.message]);
+        }, [user.id, otherId, navigate, user.message]);
 
     const formatTimestamp = (timestamp) => {
         return new Date(timestamp).toLocaleString("en-US", {
@@ -69,7 +67,7 @@ function Conversation() {
         if (messageContent.trim()) {
             const newMessage = {
                 id: Date.now(), // Temporary ID
-                sender_id: userId,
+                sender_id: user.id,
                 recipient_id: parseInt(otherId),
                 content: messageContent,
                 timestamp: new Date().toISOString(),

@@ -18,7 +18,7 @@ class Signup(Resource):
         db.session.add(new_user)
         db.session.commit()
         session['user_id'] = new_user.id
-        return make_response(new_user.to_dict(), 201)
+        return make_response(new_user.serialize(), 201)
     
 class Signin(Resource):
     def post(self):
@@ -31,7 +31,7 @@ class Signin(Resource):
         if not user.password == password:
             return {'message': 'Invalid password'}, 422
         session['user_id'] = user.id
-        return make_response(user.to_dict(), 200)
+        return make_response(user.serialize(), 200)
     
 class Signout(Resource):
     def delete(self):
@@ -43,7 +43,7 @@ class CheckSession(Resource):
     def get(self):
         user = User.query.filter(User.id == session.get('user_id')).first()
         if user:
-            return user.to_dict()
+            return user.serialize()
         else:
             return {'message': '401: Not Authorized'}, 401
 
@@ -171,7 +171,7 @@ class Messages(Resource):
         user_id = session['user_id']
         messages = Message.query.filter(
             or_(Message.recipient_id == user_id, Message.sender_id == user_id)).all()
-        return jsonify([message.to_dict() for message in messages])
+        return jsonify([message.serialize() for message in messages])
     
     def post(self):
         json = request.get_json()
@@ -183,7 +183,7 @@ class Messages(Resource):
         newMessage = Message(sender_id=sender_id, recipient_id=recipient_id, content=content, timestamp=timestamp)
         db.session.add(newMessage)
         db.session.commit()
-        return make_response(newMessage.to_dict(), 200)
+        return make_response(newMessage.serialize(), 200)
 
 
 @app.route('/')
