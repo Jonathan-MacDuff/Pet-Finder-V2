@@ -35,7 +35,7 @@ function Conversation() {
                     ) {relevantMessages.push(message)}
                 });
                 relevantMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-                if (relevantMessages.length == 0) {
+                if (relevantMessages.length === 0) {
                     navigate('/messages')
                 }
                 setMessages(relevantMessages)
