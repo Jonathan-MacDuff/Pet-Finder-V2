@@ -61,8 +61,8 @@ function PetUpdateForm() {
                     body: JSON.stringify(values, null, 2),
                 })
                 .then((response) => response.json())
-                .then((updatedReport) => {
-                    updatePet(updatedReport)
+                .then((updatedPet) => {
+                    updatePet(updatedPet)
                     setMessage("Pet updated successfully")
                 })
             } else {

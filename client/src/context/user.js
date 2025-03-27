@@ -16,28 +16,28 @@ function UserProvider({ children }) {
         checkSession()
       }, []);
     
-    function addPet(newReport) {
+    function addPet(newPet) {
         setUser(prevUser => ({
             ...prevUser,
-            reports: [...prevUser.reports, newReport]
+            pets: [...prevUser.pets, newPet]
         }));
     };
 
-    function updatePet(updatedReport) {
-        const updatedReports = user.reports.map(report =>
-            report.id === updatedReport.id ? updatedReport : report
+    function updatePet(updatedPet) {
+        const updatedPets = user.pets.map(pet =>
+            pet.id === updatedPet.id ? updatedPet : pet
         );
         setUser(prevUser => ({
             ...prevUser,
-            reports: [...updatedReports]
+            pets: [...updatedPets]
         }));
     };
 
     function deletePet(id) {
-        const updatedReports = user.reports.filter(report => report.pet.id !== Number(id));
+        const updatedPets = user.pets.filter(pet => pet.id !== Number(id));
         setUser(prevUser => ({
             ...prevUser,
-            reports: [...updatedReports]
+            pets: [...updatedPets]
         }));
     };
     return <UserContext.Provider value={{ user, setUser, deletePet, addPet, updatePet, checkSession }}>{children}</UserContext.Provider>;

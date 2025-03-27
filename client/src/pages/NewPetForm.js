@@ -50,8 +50,8 @@ function NewPetForm() {
                 body: JSON.stringify(values, null, 2),
             })
             .then((response) => response.json())
-            .then((newReport) => {
-                addPet(newReport)
+            .then((newPet) => {
+                addPet(newPet)
                 setMessage('Pet created successfully')
             })
         }

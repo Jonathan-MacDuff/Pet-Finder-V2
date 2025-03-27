@@ -51,7 +51,7 @@ class Pets(Resource):
 
     def get(self):
         pets = Pet.query.all()
-        return make_response([pet.to_dict() for pet in pets], 200)
+        return make_response([pet.serialize() for pet in pets], 200)
     
 class Petform(Resource):
 
@@ -61,7 +61,7 @@ class Petform(Resource):
         pet = Pet.query.filter(Pet.id == id).first()
         report = Report.query.filter(Report.pet_id == id).first()
         
-        return make_response({'pet': pet.to_dict(), 'report': report.to_dict()}, 200)
+        return make_response({'pet': pet.serialize(), 'report': report.serialize()}, 200)
     
     def post(self):
         json = request.get_json()
@@ -81,7 +81,7 @@ class Petform(Resource):
         new_report = Report(user_id=session['user_id'],pet_id=new_pet.id,report_type=('lost' if lost else 'found'))
         db.session.add(new_report)
         db.session.commit()
-        return make_response(new_report.to_dict(), 200)
+        return make_response(new_pet.serialize(), 200)
     
     def patch(self):
         json = request.get_json()
@@ -101,7 +101,7 @@ class Petform(Resource):
         db.session.add(pet)
         db.session.add(report)
         db.session.commit()
-        return make_response(report.to_dict(), 200)
+        return make_response(pet.serialize(), 200)
     
     def delete(self):
         json = request.get_json()
@@ -116,7 +116,7 @@ class Sighting(Resource):
     def get(self):
         pet_id = request.args.get('id')
         sightings = Report.query.filter(Report.pet_id == pet_id).filter(Report.report_type == 'sighting').all()
-        return make_response([sighting.to_dict() for sighting in sightings], 200)
+        return make_response([sighting.serialize() for sighting in sightings], 200)
 
     def post(self):
         json = request.get_json()
@@ -125,7 +125,7 @@ class Sighting(Resource):
             sighting_report = Report(user_id=session.get('user_id'), pet_id=pet_id, report_type=('sighting'))
             db.session.add(sighting_report)
             db.session.commit()
-            return make_response(sighting_report.to_dict(), 200)
+            return make_response(sighting_report.serialize(), 200)
         else:
             return {'message': 'Please log in to report a sighting'}, 422
         
@@ -134,7 +134,7 @@ class Comments(Resource):
     def get(self):
         pet_id = request.args.get('id')
         comments = Comment.query.filter(Comment.pet_id == pet_id).all()
-        return make_response([comment.to_dict() for comment in comments], 200)
+        return make_response([comment.serialize() for comment in comments], 200)
     
     def post(self):
         json = request.get_json()
@@ -144,7 +144,7 @@ class Comments(Resource):
         comment = Comment(content=content, user_id=user_id, pet_id=pet_id)
         db.session.add(comment)
         db.session.commit()
-        return make_response(comment.to_dict(), 200)
+        return make_response(comment.serialize(), 200)
 
     
     def patch(self):
@@ -155,7 +155,7 @@ class Comments(Resource):
         comment.content = content
         db.session.add(comment)
         db.session.commit()
-        return make_response(comment.to_dict(), 200)
+        return make_response(comment.serialize(), 200)
     
     def delete(self):
         json = request.get_json()

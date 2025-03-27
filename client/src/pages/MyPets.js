@@ -11,13 +11,11 @@ function MyPets() {
 
 
     useEffect(() => {
-        console.log(user)
         if (user.message) {
             navigate('/');
             return;
         }
         if (user.pets) {
-            console.log(user.pets)
             const myPets = (user.pets
                 .filter(pet => pet.reports[0].report_type !== 'sighting')
                 .map(pet => ({pet: pet, report: pet.reports[0]})))

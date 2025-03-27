@@ -91,6 +91,7 @@ function Conversation() {
             <form onSubmit={handleSendMessage}>
                 <input
                     type="text"
+                    name="message"
                     value={messageContent}
                     onChange={(e) => setMessageContent(e.target.value)}
                     placeholder="Type a message"

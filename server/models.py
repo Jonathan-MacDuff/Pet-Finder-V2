@@ -54,6 +54,26 @@ class Pet(db.Model, SerializerMixin):
     reports = db.relationship('Report', back_populates='pet', cascade='all, delete-orphan')
     comments = db.relationship('Comment', back_populates='pet', cascade='all, delete-orphan')
 
+    def serialize(self):
+        pet_data = {
+            'id': self.id,
+            'name': self.name,
+            'breed': self.breed,
+            'image_url': self.image_url,
+            'description': self.description
+        }
+        pet_data['reports'] = [{
+            'id': report.id,
+            'report_type': report.report_type
+        } for report in self.reports]
+        pet_data['comments'] = [{
+            'id': comment.id,
+            'content': comment.content,
+            'user': {'id': comment.user.id, 'username': comment.user.username}
+        } for comment in self.comments]
+
+        return pet_data
+
 class Report(db.Model, SerializerMixin):
 
     __tablename__ = 'reports'
@@ -69,6 +89,16 @@ class Report(db.Model, SerializerMixin):
     user = db.relationship('User', back_populates='reports')
     pet = db.relationship('Pet', back_populates='reports')
 
+    def serialize(self):
+        report_data = {
+            'id': self.id,
+            'report_type': self.report_type,
+            'user': {'id': self.user.id, 'username': self.user.username},
+            'pet': {'id': self.pet.id, 'name': self.pet.name}
+        }
+
+        return report_data
+
 class Comment(db.Model, SerializerMixin):
     
     __tablename__ = 'comments'
@@ -83,6 +113,16 @@ class Comment(db.Model, SerializerMixin):
 
     user = db.relationship('User', back_populates='comments')
     pet = db.relationship('Pet', back_populates='comments')
+
+    def serialize(self):
+        comment_data = {
+            'id': self.id,
+            'content': self.content,
+            'user': {'id': self.user.id, 'username': self.user.username},
+            'pet': {'id': self.pet.id, 'name': self.pet.name}
+        }
+
+        return comment_data
 
 class Message(db.Model, SerializerMixin):
 
@@ -100,10 +140,12 @@ class Message(db.Model, SerializerMixin):
     recipient = db.relationship('User', foreign_keys=[recipient_id], back_populates='messages_received')
 
     def serialize(self):
-        return {
+        message_data = {
             'id': self.id,
             'content': self.content,
-            'timestamp': self.timestamp.isoformat(),  # Ensures proper JSON format
-            'sender': {'id': self.sender.id, 'username': self.sender.username} if self.sender else None,
-            'recipient': {'id': self.recipient.id, 'username': self.recipient.username} if self.recipient else None
+            'timestamp': self.timestamp.isoformat(),
+            'sender': {'id': self.sender.id, 'username': self.sender.username},
+            'recipient': {'id': self.recipient.id, 'username': self.recipient.username}
         }
+
+        return message_data
