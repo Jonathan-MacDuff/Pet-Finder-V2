@@ -38,10 +38,8 @@ if __name__ == '__main__':
             while username in usernames:
                 username = fake.first_name()
             usernames.append(username)
-            user = User(
-                username=username, 
-                password=username
-                )
+            user = User(username=username)
+            user.password = username
             users.append(user)
         db.session.add_all(users)
         db.session.commit()

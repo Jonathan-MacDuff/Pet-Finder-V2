@@ -1,3 +1,4 @@
+import bcrypt
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.associationproxy import association_proxy
 
@@ -13,7 +14,7 @@ class User(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
-    password = db.Column(db.String(8))
+    _password_hash = db.Column(db.String, nullable=False)
 
     pets = db.relationship('Pet', secondary='reports', viewonly=True)
 
@@ -22,6 +23,17 @@ class User(db.Model, SerializerMixin):
     messages_sent = db.relationship('Message', foreign_keys='Message.sender_id', back_populates='sender', lazy='joined', cascade='all, delete-orphan')
     messages_received = db.relationship('Message', foreign_keys='Message.recipient_id', back_populates='recipient', lazy='joined', cascade='all, delete-orphan')
    
+    @property
+    def password(self):
+        raise AttributeError("Password is not accessible!")
+
+    @password.setter
+    def password(self, plain_text_password):
+        self._password_hash = bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+    def check_password(self, plain_text_password):
+        return bcrypt.checkpw(plain_text_password.encode('utf-8'), self._password_hash.encode('utf-8'))
+    
     def serialize(self):
         user_data = self.to_dict(only=('id', 'username'))
         # user_data['reports'] = [report.to_dict(only=('id', 'report_type')) for report in self.reports]            

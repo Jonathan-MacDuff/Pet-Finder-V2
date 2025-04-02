@@ -31,7 +31,7 @@ class Signin(Resource):
         user = User.query.filter(User.username == username).first()
         if not user:
             return {'message': 'Invalid username'}, 422
-        if not user.password == password:
+        if not user.check_password(password):
             return {'message': 'Invalid password'}, 422
         session['user_id'] = user.id
         return make_response(user.serialize(), 200)
