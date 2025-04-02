@@ -23,9 +23,9 @@ class User(db.Model, SerializerMixin):
     messages_received = db.relationship('Message', foreign_keys='Message.recipient_id', back_populates='recipient', lazy='joined', cascade='all, delete-orphan')
    
     def serialize(self):
-        user_data = self.to_dict(only=('id', 'username', 'password'))
-        user_data['reports'] = [report.to_dict(only=('id', 'report_type')) for report in self.reports]            
-        user_data['comments'] = [comment.to_dict(only=('id', 'content')) for comment in self.comments]
+        user_data = self.to_dict(only=('id', 'username'))
+        # user_data['reports'] = [report.to_dict(only=('id', 'report_type')) for report in self.reports]            
+        # user_data['comments'] = [comment.to_dict(only=('id', 'content')) for comment in self.comments]
         user_data['messages_sent'] = [message.to_dict(only=('id', 'content', 'timestamp')) for message in self.messages_sent]
         user_data['messages_received'] = [message.to_dict(only=('id', 'content', 'timestamp')) for message in self.messages_received]
         user_data['pets'] = [{

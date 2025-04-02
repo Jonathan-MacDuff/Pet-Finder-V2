@@ -11,7 +11,8 @@ function SinglePet() {
     const { id } = useParams();
     const navigate = useNavigate();
     const [data, setData] = useState(null);
-    const [message, setMessage] = useState('');
+    const [petMessage, setPetMessage] = useState('');
+    const [commentMessage, setCommentMessage] = useState('');
 
     useEffect(() => {
         fetch(`/petform?id=${id}`)
@@ -21,7 +22,7 @@ function SinglePet() {
         })
         .catch((error) => {
             console.error("Error fetching pet data:", error);
-            setMessage(`Error fetching pet data: ${error}`)
+            setPetMessage(`Error fetching pet data: ${error}`)
         });
     }, [id]);
 
@@ -30,7 +31,7 @@ function SinglePet() {
         if (user.id === data.report.user.id) {
             navigate(`/petupdate/${id}`)
         }
-        else setMessage("Please log in as this pet's user to update it")
+        else setPetMessage("Please log in as this pet's user to update it")
     };       
 
     function handleDeleteClick(event) {
@@ -45,17 +46,17 @@ function SinglePet() {
             })
             .then(() => {
                 deletePet(id)
-                setMessage('Pet deleted successfully')})
+                setPetMessage('Pet deleted successfully')})
                 navigate('/mypets')
         }
-        else setMessage("Please log in as this pet's user to delete it")
+        else setPetMessage("Please log in as this pet's user to delete it")
         };
 
 
     function handleSightingClick(event) {
         event.preventDefault()
         if (user.message) {
-            setMessage('Please log in to report a sighting');
+            setPetMessage('Please log in to report a sighting');
             return
         };
         fetch('/sighting', {
@@ -65,7 +66,7 @@ function SinglePet() {
             },
             body: JSON.stringify({id})
         })
-        .then(() => {setMessage('Pet sighting reported successfully')})
+        .then(() => {setPetMessage('Pet sighting reported successfully')})
     };
 
     function handleSightingsClick(event) {
@@ -73,7 +74,7 @@ function SinglePet() {
         if (user.id === data.report.user.id) {
             navigate(`/sighting/${id}`)
         }
-        else setMessage("Please log in as this pet's user to view it's sightings")
+        else setPetMessage("Please log in as this pet's user to view it's sightings")
     };
 
     const formSchema = yup.object().shape({
@@ -88,8 +89,8 @@ function SinglePet() {
         },
         validationSchema:formSchema,
         onSubmit: (values) => {
-            if (user.message) {
-                setMessage('Please log in to leave a comment');
+            if (!user || user.message) {
+                setCommentMessage('Please log in to leave a comment');
                 return
             };
             fetch('/comment', {
@@ -97,7 +98,7 @@ function SinglePet() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(values, null, 2),
+                body: JSON.stringify({...values, user_id: user.id}),
             })
             .then((r) => r.json())
             .then((newComment) => {
@@ -108,9 +109,12 @@ function SinglePet() {
                         comments: [...prevData.pet.comments, newComment]
                     }
                 }));
-                setMessage('Comment posted successfully.');
+                setCommentMessage('Comment posted successfully.');
                 formik.resetForm();
             })
+            .catch((error) => {
+                console.error("Error posting comment:", error);
+            });
         },
     });
 
@@ -126,7 +130,7 @@ function SinglePet() {
         <button onClick = {handleUpdateClick} >Update</button>
         <button onClick = {handleDeleteClick} >Delete</button>
         <button onClick = {handleSightingsClick}>View Sightings</button>
-        <p>{message}</p>
+        <p>{petMessage}</p>
         <div>
             {data.pet.comments.map((comment) => 
                 <div key={comment.id}>
@@ -139,7 +143,12 @@ function SinglePet() {
             <label>Comment</label>
             <br/>
             <input type='text' id='content' name='content' value={formik.values.content}
-            onChange={formik.handleChange}></input>
+            onChange={(event) => {
+                formik.handleChange(event); 
+                setCommentMessage('');
+                }}></input>
+            <p style={{color:'red'}}>{formik.errors.content}</p>
+            <p>{commentMessage}</p>
             <br/>
             <button type='submit'>Post</button>
         </form>

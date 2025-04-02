@@ -9,6 +9,7 @@ function Messages() {
     const [messageContent, setMessageContent] = useState('');
     const [recipient, setRecipient] = useState('');
     const navigate = useNavigate();
+    const [message, setMessage] = useState('');
 
     useEffect(() => {
 
@@ -51,7 +52,12 @@ function Messages() {
             sender_id: user.id,
             timestamp
         };
+        if (messageData.content === '') {
+            setMessage('Message cannot be blank, please try again')
+            return
+        }
         console.log(messageData)
+
         fetch('/messages', {
             method: 'POST',
             headers: {
@@ -63,8 +69,13 @@ function Messages() {
         .then((newMessage) => {
             setMessageContent('');
             setRecipient('');
+            setMessage('');
             setMessages((prevMessages) => [newMessage, ...prevMessages])
-        });        
+        })      
+        .catch((error) => {
+            console.error("Error sending message:", error);
+            setMessage('Recipient not found')
+        })
     }
 
     if (!user) return <p>Loading messages...</p>;
@@ -92,6 +103,7 @@ function Messages() {
                     onChange={(e) => setMessageContent(e.target.value)}
                     ></input>
                 </label>
+                <p style={{color:'red'}}>{message}</p>
                 <br/>
                 <button type='submit'>Send</button>
             </form>
