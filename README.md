@@ -28,6 +28,10 @@ This file is used to generate random information to fill the database for testin
 
 This file sets up the various pathing for the frontend.
 
+## Conversation.js
+
+This file utilizes FlaskSocketIO to allow users to communicate in real time.
+
 ## NavBar.js
 
 This file defines a NavBar to be used on all pages for quick navigation.
@@ -48,9 +52,21 @@ This file allows a user to update an existing Pet associated with their account.
 
 This file allows for a more detailed view of a single Pet, as well as update and delete functionality for the user who reported this pet. The pet owner can also view all sightings of the pet.
 
+## user.js
+
+This file stores the current user in global state for access in a variety of other components.
+
 ## Home.js
 
 This is a simple homepage, to be added to later.
+
+## Messages.js
+
+This page allows the current user to view all of their conversations with other users, and navigation to each related conversation.
+
+## MyPets.js
+
+This page displays the current user's pets, and allows navigation to each of these pets' SinglePet page.
 
 ## NewPetForm.js
 
@@ -75,4 +91,3 @@ Thanks for your interest in this app! If you have any questions, feel free to re
 ## Resources
 
 - [Blog](https://medium.com/@jonathan-macduff/building-a-pet-finder-19a3e57a04d5)
-- [Video Walkthrough](https://youtu.be/YQqpgJgfqSc)
