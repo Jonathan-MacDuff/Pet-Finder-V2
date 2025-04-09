@@ -23,10 +23,10 @@ function App() {
           <Route path="/signin" element={<Signin />} />
           <Route path="/mypets" element={<MyPets />} />
           <Route path="/pets" element={<PetList />} />
-          <Route path="/petform" element={<NewPetForm />} />
-          <Route path="/sighting/:id" element={<PetSightings />} />
-          <Route path="/singlepet/:id" element={<SinglePet />} />
-          <Route path="/petupdate/:id" element={<PetUpdateForm />} />
+          <Route path="/pets/new" element={<NewPetForm />} />
+          <Route path="/pets/:id/sightings" element={<PetSightings />} />
+          <Route path="/pets/:id" element={<SinglePet />} />
+          <Route path="/pets/:id/edit" element={<PetUpdateForm />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/conversation/:otherId" element={<Conversation />} />
           <Route path="*" element={<Navigate to="/" replace />} />

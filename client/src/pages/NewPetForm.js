@@ -42,7 +42,7 @@ function NewPetForm() {
         },
         validationSchema: formSchema,
         onSubmit: (values) => {
-            fetch('/petform', {
+            fetch('/pets', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

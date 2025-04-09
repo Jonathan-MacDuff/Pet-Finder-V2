@@ -56,15 +56,6 @@ class Pets(Resource):
         pets = Pet.query.all()
         return make_response([pet.serialize() for pet in pets], 200)
     
-class Petform(Resource):
-
-    def get(self):
-        id = request.args.get('id')
-
-        pet = Pet.query.filter(Pet.id == id).first()
-        report = Report.query.filter(Report.pet_id == id).first()
-        
-        return make_response({'pet': pet.serialize(), 'report': report.serialize()}, 200)
     
     def post(self):
         if not session['user_id']:
@@ -86,9 +77,17 @@ class Petform(Resource):
         db.session.commit()
         return make_response(new_pet.serialize(), 200)
     
-    def patch(self):
+class SinglePet(Resource):
+
+    def get(self, id):
+        pet = Pet.query.filter(Pet.id == id).first()
+        if not pet:
+            return {'message': 'Pet not found'}, 404
+        report = Report.query.filter(Report.pet_id == id).first()
+        return make_response({'pet': pet.serialize(), 'report': report.serialize()}, 200)
+    
+    def patch(self, id):
         json = request.get_json()
-        id = json.get('id')
         user = User.query.filter(User.id == session['user_id']).first()
         pets = [pet for pet in user.pets if pet.id == id]
         reports = [report for report in user.reports if report.pet_id == id]
@@ -111,9 +110,7 @@ class Petform(Resource):
         db.session.commit()
         return make_response(pet.serialize(), 200)
     
-    def delete(self):
-        json = request.get_json()
-        id = json.get('id')
+    def delete(self, id):
         user = User.query.filter(User.id == session['user_id']).first()
         pets = [pet for pet in user.pets if pet.id == id]
         if len(pets) == 0:
@@ -122,22 +119,20 @@ class Petform(Resource):
         db.session.commit()
         return {'message': 'Pet successfully deleted'}, 200
     
-class Sighting(Resource):
+class Sightings(Resource):
 
-    def get(self):
+    def get(self, id):
         if not session['user_id']:
             return {'message': 'Not Authorized'}, 401
-        pet_id = request.args.get('id')
-        sightings = Report.query.filter(Report.pet_id == pet_id).filter(Report.report_type == 'sighting').all()
+        sightings = Report.query.filter(Report.pet_id == id).filter(Report.report_type == 'sighting').all()
         return make_response([sighting.serialize() for sighting in sightings], 200)
 
-    def post(self):
+    def post(self, id):
         if not session['user_id']:
             return {'message': 'Not Authorized'}, 401
-        json = request.get_json()
-        pet_id = json.get('id')
+
         if session.get('user_id'):
-            sighting_report = Report(user_id=session.get('user_id'), pet_id=pet_id, report_type=('sighting'))
+            sighting_report = Report(user_id=session.get('user_id'), pet_id=id, report_type=('sighting'))
             db.session.add(sighting_report)
             db.session.commit()
             return make_response(sighting_report.serialize(), 200)
@@ -146,19 +141,18 @@ class Sighting(Resource):
         
 class Comments(Resource):
 
-    def get(self):
-        pet_id = request.args.get('id')
-        comments = Comment.query.filter(Comment.pet_id == pet_id).all()
-        return make_response([comment.serialize() for comment in comments], 200)
+    # def get(self):
+    #     pet_id = request.args.get('id')
+    #     comments = Comment.query.filter(Comment.pet_id == pet_id).all()
+    #     return make_response([comment.serialize() for comment in comments], 200)
     
-    def post(self):
+    def post(self, id):
         if not session['user_id']:
             return {'message': 'Not Authorized'}, 401
         json = request.get_json()
-        pet_id = json.get('pet_id')
         content = json.get('content')
-        user_id = json.get('user_id')
-        comment = Comment(content=content, user_id=user_id, pet_id=pet_id)
+        user_id = session['user_id']
+        comment = Comment(content=content, user_id=user_id, pet_id=id)
         db.session.add(comment)
         db.session.commit()
         return make_response(comment.serialize(), 200)
@@ -218,9 +212,9 @@ api.add_resource(Pets, '/pets', endpoint='pets')
 api.add_resource(Signup, '/signup', endpoint='signup')
 api.add_resource(Signin, '/signin', endpoint='signin')
 api.add_resource(Signout, '/signout', endpoint='signout')
-api.add_resource(Petform, '/petform', endpoint='petform')
-api.add_resource(Sighting, '/sighting', endpoint='sighting')
-api.add_resource(Comments, '/comment', endpoint='comment')
+api.add_resource(SinglePet, '/pets/<int:id>', endpoint='pets/<int:id>')
+api.add_resource(Sightings, '/pets/<int:id>/sightings', endpoint='pets/<int:id>/sightings')
+api.add_resource(Comments, '/pets/<int:id>/comments', endpoint='/pets/<int:id>/comments')
 api.add_resource(Messages, '/messages', endpoint='messages')
 api.add_resource(CheckSession, '/checksession')
 

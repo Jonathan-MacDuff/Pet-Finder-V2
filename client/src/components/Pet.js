@@ -8,7 +8,7 @@ function Pet({pet, report}) {
     const id = pet.id;
 
     function handlePetClick() {
-        navigate(`/singlepet/${id}`)
+        navigate(`/pets/${id}`)
     };
 
     return (

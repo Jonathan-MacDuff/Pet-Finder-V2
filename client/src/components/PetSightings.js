@@ -8,7 +8,7 @@ function PetSightings() {
     const [data, setData] = useState([])
 
     useEffect(() => {
-        fetch(`/sighting?id=${id}`)
+        fetch(`/pets/${id}/sightings`)
         .then((r) => r.json())
         .then((data) => {
             console.log(data);

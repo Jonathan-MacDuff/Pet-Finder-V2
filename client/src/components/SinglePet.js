@@ -15,7 +15,7 @@ function SinglePet() {
     const [commentMessage, setCommentMessage] = useState('');
 
     useEffect(() => {
-        fetch(`/petform?id=${id}`)
+        fetch(`/pets/${id}`)
         .then((r) => r.json())
         .then((data) => {
             setData(data)
@@ -29,7 +29,7 @@ function SinglePet() {
     function handleUpdateClick(event) {
         event.preventDefault()
         if (user.id === data.report.user.id) {
-            navigate(`/petupdate/${id}`)
+            navigate(`/pets/${id}/edit`)
         }
         else setPetMessage("Please log in as this pet's user to update it")
     };       
@@ -37,7 +37,7 @@ function SinglePet() {
     function handleDeleteClick(event) {
         event.preventDefault();
         if (user.id === data.report.user.id) {       
-            fetch('/petform', {
+            fetch(`/pets/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ function SinglePet() {
             setPetMessage('Please log in to report a sighting');
             return
         };
-        fetch('/sighting', {
+        fetch(`/pets/${id}/sightings`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -72,7 +72,7 @@ function SinglePet() {
     function handleSightingsClick(event) {
         event.preventDefault();
         if (user.id === data.report.user.id) {
-            navigate(`/sighting/${id}`)
+            navigate(`/pets/${id}/sightings`)
         }
         else setPetMessage("Please log in as this pet's user to view it's sightings")
     };
@@ -83,9 +83,7 @@ function SinglePet() {
 
     const formik = useFormik({
         initialValues: {
-        content: '',
-        user_id: user.id,
-        pet_id: id,
+        content: ''
         },
         validationSchema:formSchema,
         onSubmit: (values) => {
@@ -93,12 +91,12 @@ function SinglePet() {
                 setCommentMessage('Please log in to leave a comment');
                 return
             };
-            fetch('/comment', {
+            fetch(`/pets/${id}/comments`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({...values, user_id: user.id}),
+                body: JSON.stringify({content: values.content}),
             })
             .then((r) => r.json())
             .then((newComment) => {

@@ -18,7 +18,7 @@ function PetUpdateForm() {
             navigate('/');
             return;
         }
-        fetch(`/petform?id=${id}`)
+        fetch(`/pets/${id}`)
         .then((r) => r.json())
         .then((data) => {
             console.log(data);
@@ -53,7 +53,7 @@ function PetUpdateForm() {
         enableReinitialize: true,
         onSubmit: (values) => {
             if (user.id === data.report.user.id) {
-                fetch('/petform', {
+                fetch(`/pets/${id}`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
