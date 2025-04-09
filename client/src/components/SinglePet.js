@@ -120,6 +120,65 @@ function SinglePet() {
 
     if (!data) return <div>Loading...</div>
 
+    if (user.id === data.report.user.id) {
+
+        return (
+            <>
+            <h1>{data.pet.name}</h1>
+            <h2>{data.pet.breed}</h2>
+            <p>{data.pet.description}</p>
+            <h3>{data.report.lost ? 'Lost' : 'Found'}</h3>
+            <button onClick = {handleSightingClick}>Report Sighting</button>
+            <button onClick = {handleUpdateClick} >Update</button>
+            <button onClick = {handleDeleteClick} >Delete</button>
+            <button onClick = {handleSightingsClick}>View Sightings</button>
+            <p>{petMessage}</p>
+            <div>
+                {data.pet.comments.map((comment) => 
+                    <div key={comment.id}>
+                    <h1>{comment.user.username}</h1>
+                    <p>{comment.content}</p>
+                    </div>
+                )}
+            </div>
+            <form onSubmit={formik.handleSubmit}>
+                <label>Comment</label>
+                <br/>
+                <input type='text' id='content' name='content' value={formik.values.content}
+                onChange={(event) => {
+                    formik.handleChange(event); 
+                    setCommentMessage('');
+                    }}></input>
+                <p style={{color:'red'}}>{formik.errors.content}</p>
+                <p>{commentMessage}</p>
+                <br/>
+                <button type='submit'>Post</button>
+            </form>
+            </>
+        )
+    };
+
+    if (user.message) {
+
+        return (
+            <>
+            <h1>{data.pet.name}</h1>
+            <h2>{data.pet.breed}</h2>
+            <p>{data.pet.description}</p>
+            <h3>{data.report.lost ? 'Lost' : 'Found'}</h3>
+            <p>{petMessage}</p>
+            <div>
+                {data.pet.comments.map((comment) => 
+                    <div key={comment.id}>
+                    <h1>{comment.user.username}</h1>
+                    <p>{comment.content}</p>
+                    </div>
+                )}
+            </div>
+            </>
+        )
+    };
+
     return (
         <>
         <h1>{data.pet.name}</h1>
@@ -127,9 +186,6 @@ function SinglePet() {
         <p>{data.pet.description}</p>
         <h3>{data.report.lost ? 'Lost' : 'Found'}</h3>
         <button onClick = {handleSightingClick}>Report Sighting</button>
-        <button onClick = {handleUpdateClick} >Update</button>
-        <button onClick = {handleDeleteClick} >Delete</button>
-        <button onClick = {handleSightingsClick}>View Sightings</button>
         <p>{petMessage}</p>
         <div>
             {data.pet.comments.map((comment) => 
@@ -153,8 +209,7 @@ function SinglePet() {
             <button type='submit'>Post</button>
         </form>
         </>
-    );
-
+    )
 };
 
 export default SinglePet;

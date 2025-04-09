@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is an app to report lost and found pets. A user should be able to create an account, and generate reports on lost or found pets associated with their account.
+This is an app to report lost and found pets. A user can create an account, and generate reports on lost or found pets associated with their account. They can also report sightings of an existing pet in the database, as well as leave comments on them, and message other users in real-time.
 
 # Backend
 

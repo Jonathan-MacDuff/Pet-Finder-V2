@@ -67,6 +67,8 @@ class Petform(Resource):
         return make_response({'pet': pet.serialize(), 'report': report.serialize()}, 200)
     
     def post(self):
+        if not session['user_id']:
+            return {'message': 'Not Authorized'}, 401
         json = request.get_json()
         name = json.get('name')
         breed = json.get('breed')
@@ -74,8 +76,6 @@ class Petform(Resource):
         lost = json.get('lost')
         found = json.get('found')
         description = json.get('description')
-        if not session['user_id']:
-            return {'message': 'Please log in to continue'}, 422
         if (lost == True and found == True) or (lost == False and found == False):
             return {'message': 'Please select exactly one lost or found checkbox'}, 422
         new_pet = Pet(name=name,breed=breed,image_url=image_url,description=description)
@@ -89,8 +89,13 @@ class Petform(Resource):
     def patch(self):
         json = request.get_json()
         id = json.get('id')
-        pet = Pet.query.filter(Pet.id == id).first()
-        report = Report.query.filter(Report.pet_id == id).first()
+        user = User.query.filter(User.id == session['user_id']).first()
+        pets = [pet for pet in user.pets if pet.id == id]
+        reports = [report for report in user.reports if report.pet_id == id]
+        if len(pets) == 0:
+            return {'message': 'Not Authorized'}, 401
+        pet = pets[0]
+        report = reports[0]
         name = json.get('name')
         breed = json.get('breed')
         image_url = json.get('image_url')
@@ -109,19 +114,26 @@ class Petform(Resource):
     def delete(self):
         json = request.get_json()
         id = json.get('id')
-        pet = Pet.query.filter(Pet.id == id).first()
-        db.session.delete(pet)
+        user = User.query.filter(User.id == session['user_id']).first()
+        pets = [pet for pet in user.pets if pet.id == id]
+        if len(pets) == 0:
+            return {'message': 'Not Authorized'}, 401
+        db.session.delete(pets[0])
         db.session.commit()
         return {'message': 'Pet successfully deleted'}, 200
     
 class Sighting(Resource):
 
     def get(self):
+        if not session['user_id']:
+            return {'message': 'Not Authorized'}, 401
         pet_id = request.args.get('id')
         sightings = Report.query.filter(Report.pet_id == pet_id).filter(Report.report_type == 'sighting').all()
         return make_response([sighting.serialize() for sighting in sightings], 200)
 
     def post(self):
+        if not session['user_id']:
+            return {'message': 'Not Authorized'}, 401
         json = request.get_json()
         pet_id = json.get('id')
         if session.get('user_id'):
@@ -140,6 +152,8 @@ class Comments(Resource):
         return make_response([comment.serialize() for comment in comments], 200)
     
     def post(self):
+        if not session['user_id']:
+            return {'message': 'Not Authorized'}, 401
         json = request.get_json()
         pet_id = json.get('pet_id')
         content = json.get('content')
@@ -149,34 +163,41 @@ class Comments(Resource):
         db.session.commit()
         return make_response(comment.serialize(), 200)
 
+    # def patch(self):
+    #     json = request.get_json()
+    #     id = json.get('id')
+    #     comment = Comment.query.filter(Comment.id == id).first()
+    #     if not session['user_id'] == comment.user.id:
+    #         return {'message': 'Not Authorized'}, 401
+    #     content = json.get('content')
+    #     comment.content = content
+    #     db.session.add(comment)
+    #     db.session.commit()
+    #     return make_response(comment.serialize(), 200)
     
-    def patch(self):
-        json = request.get_json()
-        id = json.get('id')
-        comment = Comment.query.filter(Comment.id == id).first()
-        content = json.get('content')
-        comment.content = content
-        db.session.add(comment)
-        db.session.commit()
-        return make_response(comment.serialize(), 200)
-    
-    def delete(self):
-        json = request.get_json()
-        id = json.get('id')
-        comment = Comment.query.filter(Comment.id == id).first()
-        db.session.delete(comment)
-        db.session.commit()
-        return {'message': 'Comment successfully deleted'}, 200
+    # def delete(self):
+    #     json = request.get_json()
+    #     id = json.get('id')
+    #     comment = Comment.query.filter(Comment.id == id).first()
+    #     if not session['user_id'] == comment.user.id:
+    #         return {'message': 'Not Authorized'}, 401
+    #     db.session.delete(comment)
+    #     db.session.commit()
+    #     return {'message': 'Comment successfully deleted'}, 200
     
 class Messages(Resource):
 
     def get(self):
+        if not session['user_id']:
+            return {'message': 'Not Authorized'}, 401
         user_id = session['user_id']
         messages = Message.query.filter(
             or_(Message.recipient_id == user_id, Message.sender_id == user_id)).all()
         return jsonify([message.serialize() for message in messages])
     
     def post(self):
+        if not session['user_id']:
+            return {'message': 'Not Authorized'}, 401
         json = request.get_json()
         content = json.get('content')
         timestamp = datetime.fromisoformat(json.get('timestamp').replace('Z', ''))
