@@ -1,6 +1,7 @@
 import { React, useContext } from "react";
 import {  useNavigate, Link } from "react-router-dom";
 import { UserContext } from "../context/user";
+import { BACKEND_URL } from '../config';
 
 function NavBar() {
 
@@ -8,7 +9,7 @@ function NavBar() {
     const navigate = useNavigate();
 
     function handleSignout() {
-        fetch('/signout', {
+        fetch(`${BACKEND_URL}/signout`, {
           method: 'DELETE',
           headers: {
               'Content-Type': 'application/json',

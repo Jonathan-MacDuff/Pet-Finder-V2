@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { UserContext } from "../context/user";
+import { BACKEND_URL } from '../config';
 
 function Signin() {
 
@@ -23,7 +24,7 @@ function Signin() {
         },
         validationSchema:formSchema,
         onSubmit: (values) => {
-            fetch('/signin', {
+            fetch(`${BACKEND_URL}/signin`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,12 +1,13 @@
 import {React, useState, useEffect} from "react";
 import Pet from "../components/Pet";
+import { BACKEND_URL } from '../config';
 
 
 function PetList() {
     const [pets, setPets] = useState([]);
 
     useEffect(() => {
-        fetch('/pets')
+        fetch(`${BACKEND_URL}/pets`)
             .then((r) => r.json())
             .then((petData) => {
                 const petsWithReports = petData.map(pet => ({

@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { useParams } from "react-router-dom";
+import { BACKEND_URL } from '../config';
 
 
 function PetSightings() {
@@ -8,7 +9,7 @@ function PetSightings() {
     const [data, setData] = useState([])
 
     useEffect(() => {
-        fetch(`/pets/${id}/sightings`)
+        fetch(`${BACKEND_URL}/pets/${id}/sightings`)
         .then((r) => r.json())
         .then((data) => {
             console.log(data);

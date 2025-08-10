@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { BACKEND_URL } from '../config';
 
 const UserContext = React.createContext();
 
@@ -7,7 +8,7 @@ function UserProvider({ children }) {
     const [user, setUser] = useState({});
 
     function checkSession() {
-        fetch('/checksession')
+        fetch(`${BACKEND_URL}/checksession`)
         .then((r) => r.json())
         .then((data) => setUser(data))
     }

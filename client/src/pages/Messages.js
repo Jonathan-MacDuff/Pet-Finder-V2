@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useContext} from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user";
+import { BACKEND_URL } from '../config';
 
 function Messages() {
 
@@ -18,7 +19,7 @@ function Messages() {
             return;
         }
 
-        fetch('/messages')
+        fetch(`${BACKEND_URL}/messages`)
         .then((r) => r.json())
         .then((messageData) => {
             if (user.message) {
@@ -58,7 +59,7 @@ function Messages() {
         }
         console.log(messageData)
 
-        fetch('/messages', {
+        fetch(`${BACKEND_URL}/messages`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { UserContext } from "../context/user";
+import { BACKEND_URL } from '../config';
 
 
 function PetUpdateForm() {
@@ -18,7 +19,7 @@ function PetUpdateForm() {
             navigate('/');
             return;
         }
-        fetch(`/pets/${id}`)
+        fetch(`${BACKEND_URL}/pets/${id}`)
         .then((r) => r.json())
         .then((data) => {
             console.log(data);
@@ -53,7 +54,7 @@ function PetUpdateForm() {
         enableReinitialize: true,
         onSubmit: (values) => {
             if (user.id === data.report.user.id) {
-                fetch(`/pets/${id}`, {
+                fetch(`${BACKEND_URL}/pets/${id}`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',

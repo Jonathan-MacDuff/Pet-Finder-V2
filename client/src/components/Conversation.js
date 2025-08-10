@@ -2,6 +2,7 @@ import React, {useEffect, useState, useContext} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {io} from "socket.io-client";
 import { UserContext } from "../context/user";
+import { BACKEND_URL } from '../config';
 
 const socket = io("http://localhost:5555", {
     transports: ["websocket"],
@@ -22,7 +23,7 @@ function Conversation() {
             return;
         }
         if (user.id && otherId) {
-            fetch('/messages')
+            fetch(`${BACKEND_URL}/messages`)
             .then((r) => r.json())
             .then((messageData) => {
                 const relevantMessages = []

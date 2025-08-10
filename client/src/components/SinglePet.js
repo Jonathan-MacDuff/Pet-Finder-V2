@@ -3,6 +3,7 @@ import * as yup from "yup";
 import { React, useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../context/user";
+import { BACKEND_URL } from '../config';
 
 
 function SinglePet() {
@@ -15,7 +16,7 @@ function SinglePet() {
     const [commentMessage, setCommentMessage] = useState('');
 
     useEffect(() => {
-        fetch(`/pets/${id}`)
+        fetch(`${BACKEND_URL}/pets/${id}`)
         .then((r) => r.json())
         .then((data) => {
             setData(data)
@@ -37,7 +38,7 @@ function SinglePet() {
     function handleDeleteClick(event) {
         event.preventDefault();
         if (user.id === data.report.user.id) {       
-            fetch(`/pets/${id}`, {
+            fetch(`${BACKEND_URL}/pets/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -59,7 +60,7 @@ function SinglePet() {
             setPetMessage('Please log in to report a sighting');
             return
         };
-        fetch(`/pets/${id}/sightings`, {
+        fetch(`${BACKEND_URL}/pets/${id}/sightings`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -91,7 +92,7 @@ function SinglePet() {
                 setCommentMessage('Please log in to leave a comment');
                 return
             };
-            fetch(`/pets/${id}/comments`, {
+            fetch(`${BACKEND_URL}/pets/${id}/comments`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
