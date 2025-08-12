@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
-from flask import request, make_response, jsonify
+from flask import Blueprint, request, make_response, jsonify, session
 from flask_restful import Resource
 from sqlalchemy import or_
+from datetime import datetime
 
-from config import app, db, api, session, socketio, datetime
-from models import User, Pet, Report, Comment, Message
+from . import db, api
+from .models import User, Pet, Report, Comment, Message
+
+bp = Blueprint('petfinder', __name__)
 
 
 
@@ -203,10 +206,9 @@ class Messages(Resource):
         db.session.commit()
         return make_response(newMessage.serialize(), 200)
 
-
-@app.route('/')
+@bp.route('/')
 def index():
-    return '<h1>Project Server</h1>'
+    return '<h1>PetFinder API</h1>'
 
 api.add_resource(Pets, '/pets', endpoint='pets')
 api.add_resource(Signup, '/signup', endpoint='signup')
@@ -217,8 +219,4 @@ api.add_resource(Sightings, '/pets/<int:id>/sightings', endpoint='pets/<int:id>/
 api.add_resource(Comments, '/pets/<int:id>/comments', endpoint='/pets/<int:id>/comments')
 api.add_resource(Messages, '/messages', endpoint='messages')
 api.add_resource(CheckSession, '/checksession')
-
-
-if __name__ == '__main__':
-    socketio.run(app, debug=True, port=5555)
 
