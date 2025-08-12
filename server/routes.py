@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+#1
 from flask_restful import Resource
 from flask import request, make_response, jsonify, session
 from sqlalchemy import or_
@@ -8,7 +9,7 @@ from datetime import datetime
 from .extensions import db
 from .models import User, Pet, Report, Comment, Message
 
-
+#2
 
 class Signup(Resource):
     def post(self):
