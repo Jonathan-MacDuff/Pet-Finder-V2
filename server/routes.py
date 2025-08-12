@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 
-from flask import Blueprint, request, make_response, jsonify, session
 from flask_restful import Resource
+from flask import request, make_response, jsonify, session
 from sqlalchemy import or_
 from datetime import datetime
 
-from . import db, api
+from .extensions import db
 from .models import User, Pet, Report, Comment, Message
-
-bp = Blueprint('petfinder', __name__)
 
 
 
@@ -206,17 +204,13 @@ class Messages(Resource):
         db.session.commit()
         return make_response(newMessage.serialize(), 200)
 
-@bp.route('/')
-def index():
-    return '<h1>PetFinder API</h1>'
-
-api.add_resource(Pets, '/pets', endpoint='pets')
-api.add_resource(Signup, '/signup', endpoint='signup')
-api.add_resource(Signin, '/signin', endpoint='signin')
-api.add_resource(Signout, '/signout', endpoint='signout')
-api.add_resource(SinglePet, '/pets/<int:id>', endpoint='pets/<int:id>')
-api.add_resource(Sightings, '/pets/<int:id>/sightings', endpoint='pets/<int:id>/sightings')
-api.add_resource(Comments, '/pets/<int:id>/comments', endpoint='/pets/<int:id>/comments')
-api.add_resource(Messages, '/messages', endpoint='messages')
-api.add_resource(CheckSession, '/checksession')
-
+def register_routes(api):
+    api.add_resource(Pets, '/pets', endpoint='pets')
+    api.add_resource(Signup, '/signup', endpoint='signup')
+    api.add_resource(Signin, '/signin', endpoint='signin')
+    api.add_resource(Signout, '/signout', endpoint='signout')
+    api.add_resource(SinglePet, '/pets/<int:id>', endpoint='pet')
+    api.add_resource(Sightings, '/pets/<int:id>/sightings', endpoint='sightings')
+    api.add_resource(Comments, '/pets/<int:id>/comments', endpoint='comments')
+    api.add_resource(Messages, '/messages', endpoint='messages')
+    api.add_resource(CheckSession, '/checksession')

@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: 7e5e0c8fd819
+Revision ID: f74f0884de1b
 Revises: 
-Create Date: 2025-04-02 12:48:20.546296
+Create Date: 2025-08-12 00:34:58.856303
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7e5e0c8fd819'
+revision = 'f74f0884de1b'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -38,8 +38,8 @@ def upgrade():
     sa.Column('content', sa.String(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('pet_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['pet_id'], ['pets.id'], name=op.f('fk_comments_pet_id_pets')),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], name=op.f('fk_comments_user_id_users')),
+    sa.ForeignKeyConstraint(['pet_id'], ['pets.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('messages',
@@ -48,8 +48,8 @@ def upgrade():
     sa.Column('recipient_id', sa.Integer(), nullable=False),
     sa.Column('content', sa.Text(), nullable=False),
     sa.Column('timestamp', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
-    sa.ForeignKeyConstraint(['recipient_id'], ['users.id'], name=op.f('fk_messages_recipient_id_users')),
-    sa.ForeignKeyConstraint(['sender_id'], ['users.id'], name=op.f('fk_messages_sender_id_users')),
+    sa.ForeignKeyConstraint(['recipient_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['sender_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('reports',
@@ -57,8 +57,8 @@ def upgrade():
     sa.Column('report_type', sa.String(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('pet_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['pet_id'], ['pets.id'], name=op.f('fk_reports_pet_id_pets')),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], name=op.f('fk_reports_user_id_users')),
+    sa.ForeignKeyConstraint(['pet_id'], ['pets.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
