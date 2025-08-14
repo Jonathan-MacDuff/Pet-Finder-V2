@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
 
-#1
 from flask_restful import Resource
 from flask import request, make_response, jsonify, session
 from sqlalchemy import or_
 from datetime import datetime
 
-from .extensions import db
+from .extensions import db, api
 from .models import User, Pet, Report, Comment, Message
-
-#2
 
 class Signup(Resource):
     def post(self):
@@ -205,7 +202,7 @@ class Messages(Resource):
         db.session.commit()
         return make_response(newMessage.serialize(), 200)
 
-def register_routes(api):
+def register_routes():
     api.add_resource(Pets, '/pets', endpoint='pets')
     api.add_resource(Signup, '/signup', endpoint='signup')
     api.add_resource(Signin, '/signin', endpoint='signin')
