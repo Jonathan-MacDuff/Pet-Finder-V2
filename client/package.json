@@ -2,6 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/Pet-Finder",
   "proxy": "http://localhost:5555",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
@@ -10,7 +11,7 @@
     "formik": "^2.4.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^7.4.0",
+    "react-router-dom": "^6.28.0",
     "react-scripts": "^5.0.1",
     "socket.io-client": "^4.8.1",
     "web-vitals": "^2.1.4",

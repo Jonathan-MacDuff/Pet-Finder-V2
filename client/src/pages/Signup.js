@@ -28,6 +28,7 @@ function Signup() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify(values, null, 2),
             })
             .then((r) => r.json())
@@ -50,12 +51,12 @@ function Signup() {
             <label>Username
                 <input type='text' id='username' name='username' value={formik.values.username}
                     onChange={formik.handleChange}/>
-                <p style={{color:'red'}}>{formik.errors.username}</p>
+                <p style={{color:'red', fontWeight:'bold'}}>{formik.errors.username}</p>
             </label>
             <label>Password
                 <input type='text' id='password' name='password' value={formik.values.password}
                     onChange={formik.handleChange}/>
-                <p style={{color:'red'}}>{formik.errors.password}</p>
+                <p style={{color:'red', fontWeight:'bold'}}>{formik.errors.password}</p>
             </label>
             <button type='submit'>Submit</button>
             <p>{message}</p>

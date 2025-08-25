@@ -1,7 +1,7 @@
 from flask import Flask
-from .config import Config
-from .extensions import db, migrate, api, cors, socketio
-from .routes import register_routes
+from config import Config
+from extensions import db, migrate, api, cors, socketio
+from routes import register_routes
 from datetime import datetime
 import os
 

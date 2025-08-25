@@ -10,10 +10,12 @@ function PetList() {
         fetch(`${BACKEND_URL}/pets`)
             .then((r) => r.json())
             .then((petData) => {
-                const petsWithReports = petData.map(pet => ({
-                    pet,
-                    report: pet.reports[0]
-                }));
+                const petsWithReports = petData
+                    .filter(pet => pet.reports && pet.reports[0])
+                    .map(pet => ({
+                        pet,
+                        report: pet.reports[0]
+                    }));
                 setPets(petsWithReports);
             })
             .catch((error) => console.error('Error fetching pets:', error));

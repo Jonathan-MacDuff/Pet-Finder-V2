@@ -2,7 +2,7 @@ import bcrypt
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.associationproxy import association_proxy
 
-from .extensions import db
+from extensions import db
 
 
 
@@ -13,7 +13,7 @@ class User(db.Model, SerializerMixin):
     serialize_rules = ('-reports.user', '-comments.user', '-messages_sent', '-messages_received', '-pets.reports',)
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, unique=True, nullable=False)
+    username = db.Column(db.String, unique=True, nullable=False, index=True)
     _password_hash = db.Column(db.String, nullable=False)
 
     pets = db.relationship('Pet', secondary='reports', viewonly=True)
@@ -35,19 +35,30 @@ class User(db.Model, SerializerMixin):
         return bcrypt.checkpw(plain_text_password.encode('utf-8'), self._password_hash.encode('utf-8'))
     
     def serialize(self):
-        user_data = self.to_dict(only=('id', 'username'))
-        # user_data['reports'] = [report.to_dict(only=('id', 'report_type')) for report in self.reports]            
-        # user_data['comments'] = [comment.to_dict(only=('id', 'content')) for comment in self.comments]
-        user_data['messages_sent'] = [message.to_dict(only=('id', 'content', 'timestamp')) for message in self.messages_sent]
-        user_data['messages_received'] = [message.to_dict(only=('id', 'content', 'timestamp')) for message in self.messages_received]
-        user_data['pets'] = [{
-            **pet.to_dict(only=('id', 'name', 'breed', 'image_url', 'description')),
-            'reports': [report.to_dict(only=('id', 'report_type')) for report in pet.reports],
-            'comments': [{
-                **comment.to_dict(only=('id', 'content')),
-                'user': comment.user.to_dict(only=('id', 'username'))
-            } for comment in pet.comments]
-        } for pet in self.pets]
+        user_data = {
+            'id': self.id,
+            'username': self.username
+        }
+        
+        # Simplified pets serialization to avoid circular references and crashes
+        user_data['pets'] = []
+        for pet in self.pets:
+            pet_data = {
+                'id': pet.id,
+                'name': pet.name,
+                'breed': pet.breed,
+                'image_url': pet.image_url,
+                'description': pet.description,
+                'reports': []
+            }
+            # Only add reports for this pet that belong to this user
+            for report in pet.reports:
+                if report.user_id == self.id:
+                    pet_data['reports'].append({
+                        'id': report.id,
+                        'report_type': report.report_type
+                    })
+            user_data['pets'].append(pet_data)
 
         return user_data
 
@@ -93,10 +104,10 @@ class Report(db.Model, SerializerMixin):
     serialize_rules = ('-pet.reports', '-user.reports',)
 
     id = db.Column(db.Integer, primary_key=True)
-    report_type = db.Column(db.String, nullable=False)
+    report_type = db.Column(db.String, nullable=False, index=True)
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    pet_id = db.Column(db.Integer, db.ForeignKey('pets.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
+    pet_id = db.Column(db.Integer, db.ForeignKey('pets.id'), nullable=False, index=True)
 
     user = db.relationship('User', back_populates='reports')
     pet = db.relationship('Pet', back_populates='reports')
@@ -120,8 +131,8 @@ class Comment(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String, nullable=False)
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    pet_id = db.Column(db.Integer, db.ForeignKey('pets.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
+    pet_id = db.Column(db.Integer, db.ForeignKey('pets.id'), nullable=False, index=True)
 
     user = db.relationship('User', back_populates='comments')
     pet = db.relationship('Pet', back_populates='comments')
@@ -143,10 +154,10 @@ class Message(db.Model, SerializerMixin):
     serialize_rules = ('-sender.messages_sent', '-recipient.messages_received',)
 
     id = db.Column(db.Integer, primary_key=True)
-    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    recipient_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
+    recipient_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
     content = db.Column(db.Text, nullable=False)
-    timestamp = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
+    timestamp = db.Column(db.DateTime, nullable=False, server_default=db.func.now(), index=True)
 
     sender = db.relationship('User', foreign_keys=[sender_id], back_populates='messages_sent')
     recipient = db.relationship('User', foreign_keys=[recipient_id], back_populates='messages_received')

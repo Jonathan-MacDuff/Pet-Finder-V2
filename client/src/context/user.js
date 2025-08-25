@@ -8,7 +8,9 @@ function UserProvider({ children }) {
     const [user, setUser] = useState({});
 
     function checkSession() {
-        fetch(`${BACKEND_URL}/checksession`)
+        fetch(`${BACKEND_URL}/checksession`, {
+            credentials: 'include'
+        })
         .then((r) => r.json())
         .then((data) => setUser(data))
     }

@@ -3,10 +3,11 @@
 from flask_restful import Resource
 from flask import request, make_response, jsonify, session
 from sqlalchemy import or_
+from sqlalchemy.orm import joinedload
 from datetime import datetime
 
-from .extensions import db, api
-from .models import User, Pet, Report, Comment, Message
+from extensions import db, api
+from models import User, Pet, Report, Comment, Message
 
 class Signup(Resource):
     def post(self):
@@ -52,12 +53,16 @@ class CheckSession(Resource):
 class Pets(Resource):
 
     def get(self):
-        pets = Pet.query.all()
+        # Eager load relationships to avoid N+1 queries
+        pets = Pet.query.options(
+            joinedload(Pet.reports).joinedload(Report.user),
+            joinedload(Pet.comments).joinedload(Comment.user)
+        ).all()
         return make_response([pet.serialize() for pet in pets], 200)
     
     
     def post(self):
-        if not session['user_id']:
+        if not session.get('user_id'):
             return {'message': 'Not Authorized'}, 401
         json = request.get_json()
         name = json.get('name')
@@ -68,13 +73,17 @@ class Pets(Resource):
         description = json.get('description')
         if (lost == True and found == True) or (lost == False and found == False):
             return {'message': 'Please select exactly one lost or found checkbox'}, 422
-        new_pet = Pet(name=name,breed=breed,image_url=image_url,description=description)
-        db.session.add(new_pet)
-        db.session.commit()
-        new_report = Report(user_id=session['user_id'],pet_id=new_pet.id,report_type=('lost' if lost else 'found'))
-        db.session.add(new_report)
-        db.session.commit()
-        return make_response(new_pet.serialize(), 200)
+        try:
+            new_pet = Pet(name=name,breed=breed,image_url=image_url,description=description)
+            db.session.add(new_pet)
+            db.session.flush()  # This assigns the ID without committing
+            new_report = Report(user_id=session.get('user_id'),pet_id=new_pet.id,report_type=('lost' if lost else 'found'))
+            db.session.add(new_report)
+            db.session.commit()  # Commit both together
+            return make_response(new_pet.serialize(), 200)
+        except Exception as e:
+            db.session.rollback()  # Undo everything if anything fails
+            return {'message': 'Failed to create pet'}, 500
     
 class SinglePet(Resource):
 
@@ -82,12 +91,18 @@ class SinglePet(Resource):
         pet = Pet.query.filter(Pet.id == id).first()
         if not pet:
             return {'message': 'Pet not found'}, 404
-        report = Report.query.filter(Report.pet_id == id).first()
+        # Get the main report (lost or found, not sighting)
+        report = Report.query.filter(
+            Report.pet_id == id,
+            Report.report_type.in_(['lost', 'found'])
+        ).first()
+        if not report:
+            return {'message': 'Pet report not found'}, 404
         return make_response({'pet': pet.serialize(), 'report': report.serialize()}, 200)
     
     def patch(self, id):
         json = request.get_json()
-        user = User.query.filter(User.id == session['user_id']).first()
+        user = User.query.filter(User.id == session.get('user_id')).first()
         pets = [pet for pet in user.pets if pet.id == id]
         reports = [report for report in user.reports if report.pet_id == id]
         if len(pets) == 0:
@@ -110,7 +125,7 @@ class SinglePet(Resource):
         return make_response(pet.serialize(), 200)
     
     def delete(self, id):
-        user = User.query.filter(User.id == session['user_id']).first()
+        user = User.query.filter(User.id == session.get('user_id')).first()
         pets = [pet for pet in user.pets if pet.id == id]
         if len(pets) == 0:
             return {'message': 'Not Authorized'}, 401
@@ -121,13 +136,13 @@ class SinglePet(Resource):
 class Sightings(Resource):
 
     def get(self, id):
-        if not session['user_id']:
+        if not session.get('user_id'):
             return {'message': 'Not Authorized'}, 401
         sightings = Report.query.filter(Report.pet_id == id).filter(Report.report_type == 'sighting').all()
         return make_response([sighting.serialize() for sighting in sightings], 200)
 
     def post(self, id):
-        if not session['user_id']:
+        if not session.get('user_id'):
             return {'message': 'Not Authorized'}, 401
 
         if session.get('user_id'):
@@ -146,11 +161,11 @@ class Comments(Resource):
     #     return make_response([comment.serialize() for comment in comments], 200)
     
     def post(self, id):
-        if not session['user_id']:
+        if not session.get('user_id'):
             return {'message': 'Not Authorized'}, 401
         json = request.get_json()
         content = json.get('content')
-        user_id = session['user_id']
+        user_id = session.get('user_id')
         comment = Comment(content=content, user_id=user_id, pet_id=id)
         db.session.add(comment)
         db.session.commit()
@@ -181,15 +196,20 @@ class Comments(Resource):
 class Messages(Resource):
 
     def get(self):
-        if not session['user_id']:
+        if not session.get('user_id'):
             return {'message': 'Not Authorized'}, 401
-        user_id = session['user_id']
-        messages = Message.query.filter(
-            or_(Message.recipient_id == user_id, Message.sender_id == user_id)).all()
+        user_id = session.get('user_id')
+        # Eager load relationships and order by timestamp for better performance
+        messages = Message.query.options(
+            joinedload(Message.sender),
+            joinedload(Message.recipient)
+        ).filter(
+            or_(Message.recipient_id == user_id, Message.sender_id == user_id)
+        ).order_by(Message.timestamp.desc()).all()
         return jsonify([message.serialize() for message in messages])
     
     def post(self):
-        if not session['user_id']:
+        if not session.get('user_id'):
             return {'message': 'Not Authorized'}, 401
         json = request.get_json()
         content = json.get('content')
@@ -202,7 +222,7 @@ class Messages(Resource):
         db.session.commit()
         return make_response(newMessage.serialize(), 200)
 
-def register_routes():
+def register_routes(api):
     api.add_resource(Pets, '/pets', endpoint='pets')
     api.add_resource(Signup, '/signup', endpoint='signup')
     api.add_resource(Signin, '/signin', endpoint='signin')

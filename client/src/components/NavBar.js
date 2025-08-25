@@ -14,6 +14,7 @@ function NavBar() {
           headers: {
               'Content-Type': 'application/json',
           },
+          credentials: 'include',
           body: JSON.stringify(),
         })
         .then((r) => r.json())

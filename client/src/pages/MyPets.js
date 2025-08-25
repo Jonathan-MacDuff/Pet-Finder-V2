@@ -17,7 +17,7 @@ function MyPets() {
         }
         if (user.pets) {
             const myPets = (user.pets
-                .filter(pet => pet.reports[0].report_type !== 'sighting')
+                .filter(pet => pet.reports && pet.reports[0] && pet.reports[0].report_type !== 'sighting')
                 .map(pet => ({pet: pet, report: pet.reports[0]})))
             setPets(myPets);
         }

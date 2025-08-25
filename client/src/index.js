@@ -8,7 +8,7 @@ import { UserProvider } from "./context/user";
 const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(
-  <BrowserRouter>
+  <BrowserRouter basename="/Pet-Finder">
     <UserProvider>
       <App/>
     </UserProvider>

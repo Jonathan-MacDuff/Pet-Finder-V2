@@ -122,92 +122,118 @@ function SinglePet() {
     if (user.id === data.report.user.id) {
 
         return (
-            <>
-            <h1>{data.pet.name}</h1>
-            <h2>{data.pet.breed}</h2>
-            <p>{data.pet.description}</p>
-            <h3>{data.report.lost ? 'Lost' : 'Found'}</h3>
-            <button onClick = {handleSightingClick}>Report Sighting</button>
-            <button onClick = {handleUpdateClick} >Update</button>
-            <button onClick = {handleDeleteClick} >Delete</button>
-            <button onClick = {handleSightingsClick}>View Sightings</button>
-            <p>{petMessage}</p>
-            <div>
-                {data.pet.comments.map((comment) => 
-                    <div key={comment.id}>
-                    <h1>{comment.user.username}</h1>
-                    <p>{comment.content}</p>
+            <div className="container">
+                <div className="pet-details">
+                    <h1 className="pet-name">{data.pet.name}</h1>
+                    <h2 className="pet-breed">{data.pet.breed}</h2>
+                    <p className="pet-description">{data.pet.description}</p>
+                    <h3 className="pet-status">{data.report.lost ? 'Lost' : 'Found'}</h3>
+                    <button onClick={handleSightingClick}>Report Sighting</button>
+                    <button onClick={handleUpdateClick}>Update</button>
+                    <button onClick={handleDeleteClick}>Delete</button>
+                    <button onClick={handleSightingsClick}>View Sightings</button>
+                    {petMessage && <p className="pet-message">{petMessage}</p>}
+                </div>
+                
+                <div className="comments-section">
+                    <h3>Comments</h3>
+                    {data.pet.comments && data.pet.comments.map((comment) => 
+                        <div key={comment.id} className="comment-container fade-in">
+                            <div className="comment-user">{comment.user.username}</div>
+                            <p className="comment-content">{comment.content}</p>
+                        </div>
+                    )}
+                </div>
+                
+                <form onSubmit={formik.handleSubmit} className="comment-form">
+                    <div className="form-group">
+                        <label htmlFor="content">Add a Comment</label>
+                        <input 
+                            type="text" 
+                            id="content" 
+                            name="content" 
+                            value={formik.values.content}
+                            onChange={(event) => {
+                                formik.handleChange(event); 
+                                setCommentMessage('');
+                            }}
+                            placeholder="Share your thoughts..."
+                        />
+                        {formik.errors.content && <p className="error-message" style={{color:'red', fontWeight:'bold'}}>{formik.errors.content}</p>}
+                        {commentMessage && <p className="success-message">{commentMessage}</p>}
                     </div>
-                )}
+                    <button type="submit">Post Comment</button>
+                </form>
             </div>
-            <form onSubmit={formik.handleSubmit}>
-                <label>Comment</label>
-                <br/>
-                <input type='text' id='content' name='content' value={formik.values.content}
-                onChange={(event) => {
-                    formik.handleChange(event); 
-                    setCommentMessage('');
-                    }}></input>
-                <p style={{color:'red'}}>{formik.errors.content}</p>
-                <p>{commentMessage}</p>
-                <br/>
-                <button type='submit'>Post</button>
-            </form>
-            </>
         )
     };
 
     if (user.message) {
 
         return (
-            <>
-            <h1>{data.pet.name}</h1>
-            <h2>{data.pet.breed}</h2>
-            <p>{data.pet.description}</p>
-            <h3>{data.report.lost ? 'Lost' : 'Found'}</h3>
-            <p>{petMessage}</p>
-            <div>
-                {data.pet.comments.map((comment) => 
-                    <div key={comment.id}>
-                    <h1>{comment.user.username}</h1>
-                    <p>{comment.content}</p>
-                    </div>
-                )}
+            <div className="container">
+                <div className="pet-details">
+                    <h1 className="pet-name">{data.pet.name}</h1>
+                    <h2 className="pet-breed">{data.pet.breed}</h2>
+                    <p className="pet-description">{data.pet.description}</p>
+                    <h3 className="pet-status">{data.report.lost ? 'Lost' : 'Found'}</h3>
+                    {petMessage && <p className="pet-message">{petMessage}</p>}
+                </div>
+                
+                <div className="comments-section">
+                    <h3>Comments</h3>
+                    {data.pet.comments && data.pet.comments.map((comment) => 
+                        <div key={comment.id} className="comment-container fade-in">
+                            <div className="comment-user">{comment.user.username}</div>
+                            <p className="comment-content">{comment.content}</p>
+                        </div>
+                    )}
+                </div>
             </div>
-            </>
         )
     };
 
     return (
-        <>
-        <h1>{data.pet.name}</h1>
-        <h2>{data.pet.breed}</h2>
-        <p>{data.pet.description}</p>
-        <h3>{data.report.lost ? 'Lost' : 'Found'}</h3>
-        <button onClick = {handleSightingClick}>Report Sighting</button>
-        <p>{petMessage}</p>
-        <div>
-            {data.pet.comments.map((comment) => 
-                <div key={comment.id}>
-                <h1>{comment.user.username}</h1>
-                <p>{comment.content}</p>
+        <div className="container">
+            <div className="pet-details">
+                <h1 className="pet-name">{data.pet.name}</h1>
+                <h2 className="pet-breed">{data.pet.breed}</h2>
+                <p className="pet-description">{data.pet.description}</p>
+                <h3 className="pet-status">{data.report.lost ? 'Lost' : 'Found'}</h3>
+                <button onClick={handleSightingClick}>Report Sighting</button>
+                {petMessage && <p className="pet-message">{petMessage}</p>}
+            </div>
+            
+            <div className="comments-section">
+                <h3>Comments</h3>
+                {data.pet.comments && data.pet.comments.map((comment) => 
+                    <div key={comment.id} className="comment-container fade-in">
+                        <div className="comment-user">{comment.user.username}</div>
+                        <p className="comment-content">{comment.content}</p>
+                    </div>
+                )}
+            </div>
+            
+            <form onSubmit={formik.handleSubmit} className="comment-form">
+                <div className="form-group">
+                    <label htmlFor="content">Add a Comment</label>
+                    <input 
+                        type="text" 
+                        id="content" 
+                        name="content" 
+                        value={formik.values.content}
+                        onChange={(event) => {
+                            formik.handleChange(event); 
+                            setCommentMessage('');
+                        }}
+                        placeholder="Share your thoughts..."
+                    />
+                    {formik.errors.content && <p className="error-message">{formik.errors.content}</p>}
+                    {commentMessage && <p className="success-message">{commentMessage}</p>}
                 </div>
-            )}
+                <button type="submit">Post Comment</button>
+            </form>
         </div>
-        <form onSubmit={formik.handleSubmit}>
-            <label>Comment</label>
-            <br/>
-            <input type='text' id='content' name='content' value={formik.values.content}
-            onChange={(event) => {
-                formik.handleChange(event); 
-                setCommentMessage('');
-                }}></input>
-            <p style={{color:'red'}}>{formik.errors.content}</p>
-            <p>{commentMessage}</p>
-            <br/>
-            <button type='submit'>Post</button>
-        </form>
-        </>
     )
 };
 

@@ -48,6 +48,7 @@ function NewPetForm() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify(values, null, 2),
             })
             .then((response) => response.json())
@@ -63,35 +64,35 @@ function NewPetForm() {
             <label>Name
                 <input type='text' id='name' name='name' value={formik.values.name}
                     onChange={formik.handleChange}/>
-                <p style={{color:'red'}}>{formik.errors.name}</p>
+                <p style={{color:'red', fontWeight:'bold'}}>{formik.errors.name}</p>
             </label>
             <label>Breed
                 <input type='text' id='breed' name='breed' value={formik.values.breed}
                     onChange={formik.handleChange}/>
-                <p style={{color:'red'}}>{formik.errors.breed}</p>
+                <p style={{color:'red', fontWeight:'bold'}}>{formik.errors.breed}</p>
             </label>
             <label>Image
                 <input type='text' id='image' name='image_url' value={formik.values.image_url}
                     onChange={formik.handleChange}/>
-                <p style={{color:'red'}}>{formik.errors.image_url}</p>
+                <p style={{color:'red', fontWeight:'bold'}}>{formik.errors.image_url}</p>
             </label>
             <label>Description
                 <input type='text' id='description' name='description' value={formik.values.description}
                     onChange={formik.handleChange}/>
-                <p style={{color:'red'}}>{formik.errors.description}</p>
+                <p style={{color:'red', fontWeight:'bold'}}>{formik.errors.description}</p>
             </label>
             <label>Lost
                 <input type='checkbox' id='lost' name='lost' checked={formik.values.lost}
                     onChange={formik.handleChange}/>
-                <p style={{color:'red'}}>{formik.errors.lost}</p>
+                <p style={{color:'red', fontWeight:'bold'}}>{formik.errors.lost}</p>
             </label>
             <label>Found
                 <input type='checkbox' id='found' name='found' checked={formik.values.found}
                     onChange={formik.handleChange}/>
-                <p style={{color:'red'}}>{formik.errors.found}</p>
+                <p style={{color:'red', fontWeight:'bold'}}>{formik.errors.found}</p>
             </label>
             {formik.errors['lost-or-found'] && (
-                <p style={{ color: 'red' }}>{formik.errors['lost-or-found']}</p>
+                <p style={{ color: 'red', fontWeight: 'bold' }}>{formik.errors['lost-or-found']}</p>
             )}
             <p>{message}</p>
             <button type='submit'>Submit</button>
